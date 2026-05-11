@@ -13,3 +13,8 @@ vim.lsp.config('pyright', {
     },
   },
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function() vim.lsp.enable('pyright') end,
+})

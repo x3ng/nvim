@@ -9,5 +9,8 @@ require("lazy").setup({
   { import = "cfg.telescope" },
   { import = "cfg.which-key" },
   { import = "cfg.bufferline" },
-  { import = "cfg.lsp.plugins" },
+  { import = "cfg.lsp.mason" },
+  { import = "cfg.lsp.conform" },
+  { import = "cfg.lsp.trouble" },
+  { import = "cfg.lsp.fidget" },
 })

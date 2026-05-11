@@ -45,20 +45,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- auto start lsp
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "python", "c", "cpp", "lua" },
-  callback = function(args)
-    local ft = args.match
-    local server_map = {
-      python = 'pyright',
-      c = 'clangd',
-      cpp = 'clangd',
-      lua = 'lua_ls',
-    }
-    local server_name = server_map[ft]
-    if server_name then
-      vim.lsp.enable(server_name)
-    end
-  end,
-})
