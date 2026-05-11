@@ -1,5 +1,11 @@
 return {
   "nvim-telescope/telescope.nvim",
+  dependencies = { "nvim-lua/plenary.nvim" },
+  keys = {
+    { "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "Find files" },
+    { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Find buffers" },
+    { "<leader>fg", "<cmd>Telescope live_grep<CR>", desc = "Live grep" },
+  },
   opts = {
     defaults = {
       sorting_strategy = "ascending",
@@ -22,33 +28,16 @@ return {
       selection_caret = " ",
     },
     pickers = {
-      buffers = {          -- 缓冲区切换配置
+      buffers = {
         show_all_buffers = true,
         sort_lastused = true,
         theme = "dropdown",
         previewer = false,
       },
-      find_files = {       -- 文件查找配置
+      find_files = {
         hidden = true,
         no_ignore = true,
       },
     },
-  },  
-
-  config = function(_, opts)
-    require("telescope").setup(opts)
-    
-    local map_opts = { noremap = true, silent = true }
-    local keymap = vim.keymap.set
-    
-    keymap("n", "<leader>ff", "<cmd>Telescope find_files<CR>",
-      vim.tbl_extend("force", map_opts, { desc = "Find files" })
-    )
-    keymap("n", "<leader>fb", "<cmd>Telescope buffers<CR>",
-      vim.tbl_extend("force", map_opts, { desc = "Find buffers" })
-    )
-    keymap("n", "<leader>fg", "<cmd>Telescope live_grep<CR>",
-      vim.tbl_extend("force", map_opts, { desc = "Live grep" })
-    )
-  end,
+  },
 }
