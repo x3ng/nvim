@@ -13,16 +13,34 @@ return {
         themes = {
           -- Catppuccin
           {
-            name = "Catppuccin Mocha Dark",
+            name = "Catppuccin Mocha (Dark)",
             colorscheme = "catppuccin",
             before = [[
+              vim.opt.background = "dark"
               require("catppuccin").setup({ flavour = "mocha" })
             ]],
           },
           {
-            name = "Catppuccin Latte Light",
+            name = "Catppuccin Macchiato (Dark)",
             colorscheme = "catppuccin",
             before = [[
+              vim.opt.background = "dark"
+              require("catppuccin").setup({ flavour = "macchiato" })
+            ]],
+          },
+          {
+            name = "Catppuccin Frappe (Dark)",
+            colorscheme = "catppuccin",
+            before = [[
+              vim.opt.background = "dark"
+              require("catppuccin").setup({ flavour = "frappe" })
+            ]],
+          },
+          {
+            name = "Catppuccin Latte (Light)",
+            colorscheme = "catppuccin",
+            before = [[
+              vim.opt.background = "light"
               require("catppuccin").setup({ flavour = "latte" })
             ]],
           },
@@ -34,12 +52,44 @@ return {
               vim.opt.background = "dark"
             ]],
           },
+          {
+            name = "Gruvbox Light",
+            colorscheme = "gruvbox",
+            before = [[
+              vim.opt.background = "light"
+            ]],
+          },
           -- Tokyonight
           {
-            name = "Tokyonight Moon",
+            name = "Tokyonight Storm (Dark)",
             colorscheme = "tokyonight",
             before = [[
+              vim.opt.background = "dark"
+              require("tokyonight").setup({ style = "storm" })
+            ]],
+          },
+          {
+            name = "Tokyonight Moon (Dark)",
+            colorscheme = "tokyonight",
+            before = [[
+              vim.opt.background = "dark"
               require("tokyonight").setup({ style = "moon" })
+            ]],
+          },
+          {
+            name = "Tokyonight Night (Dark)",
+            colorscheme = "tokyonight",
+            before = [[
+              vim.opt.background = "dark"
+              require("tokyonight").setup({ style = "night" })
+            ]],
+          },
+          {
+            name = "Tokyonight Day (Light)",
+            colorscheme = "tokyonight",
+            before = [[
+              vim.opt.background = "light"
+              require("tokyonight").setup({ style = "day" })
             ]],
           },
         },
@@ -52,4 +102,3 @@ return {
   { "ellisonleao/gruvbox.nvim", lazy = true },
   { "folke/tokyonight.nvim", lazy = true },
 }
-
