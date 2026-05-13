@@ -8,6 +8,7 @@ require("lazy").setup({
   { import = "cfg.blink-cmp" },
   { import = "cfg.telescope" },
   { import = "cfg.which-key" },
+  { import = "cfg.flash" },
   { import = "cfg.bufferline" },
   { import = "cfg.lsp.mason" },
   { import = "cfg.lsp.conform" },
