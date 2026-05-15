@@ -17,6 +17,8 @@ return {
     },
   },
   config = function(_, opts)
+    require("bufferline").setup(opts)
+
     local map_opts = { noremap = true, silent = true }
     local keymap = vim.keymap.set
 
