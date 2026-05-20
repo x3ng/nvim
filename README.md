@@ -26,6 +26,7 @@ lua/
 - `lua/cfg/telescope.lua` — fuzzy finder
 - `lua/cfg/blink-cmp.lua` — completion
 - `lua/cfg/bufferline.lua` — buffer tabs
+- `lua/cfg/render-markdown.lua` — markdown renderer
 - `lua/cfg/which-key.lua` — key hints
 - `lua/cfg/lsp/init.lua` — LSP orchestration: server configs + plugin imports
 - `lua/cfg/lsp/lsp-config.lua` — diagnostics + LSP keymaps
@@ -36,6 +37,8 @@ lua/
 - `lua/cfg/lsp/conform.lua` — formatter
 - `lua/cfg/lsp/trouble.lua` — diagnostics UI
 - `lua/cfg/lsp/fidget.lua` — LSP progress
+- `lua/cfg/lsp/haskell.lua` — haskell-language-server
+- `lua/cfg/lsp/markdown.lua` — marksman
 
 ## Conventions
 

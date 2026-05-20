@@ -10,6 +10,7 @@ require("lazy").setup({
   { import = "cfg.which-key" },
   { import = "cfg.flash" },
   { import = "cfg.bufferline" },
+  { import = "cfg.render-markdown" },
   { import = "cfg.lsp.mason" },
   { import = "cfg.lsp.conform" },
   { import = "cfg.lsp.trouble" },

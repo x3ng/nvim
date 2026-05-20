@@ -6,7 +6,9 @@ return {
       javascript = { "prettierd", "prettier", stop_after_first = true },
       typescript = { "prettierd", "prettier", stop_after_first = true },
       python = { "black", "isort" },
+      haskell = { "fourmolu" },
       go = { "goimports", "gofmt" },
+      markdown = { "markdownlint" },
     },
     format_on_save = function(bufnr)
       local ignore_filetypes = { "sql", "java", "c", "cpp" }
