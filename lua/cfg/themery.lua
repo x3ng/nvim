@@ -11,6 +11,19 @@ return {
         ]],
 
         themes = {
+          -- VSCode
+          {
+            name = "VSCode Dark+",
+            colorscheme = "vscode",
+            before = [[
+              vim.opt.background = "dark"
+              require("vscode").setup({
+                style = "dark",
+                transparent = false,
+                italic_comments = true,
+              })
+            ]],
+          },
           -- Catppuccin
           {
             name = "Catppuccin Mocha (Dark)",
@@ -101,4 +114,5 @@ return {
   { "catppuccin/nvim", lazy = true },
   { "ellisonleao/gruvbox.nvim", lazy = true },
   { "folke/tokyonight.nvim", lazy = true },
+  { "Mofiqul/vscode.nvim", lazy = true },
 }
