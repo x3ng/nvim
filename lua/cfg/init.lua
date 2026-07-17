@@ -1,6 +1,6 @@
 require("cfg.core")
 require("cfg.lsp")
-require("cfg.lazy-vim")
+require("cfg.lazy-nvim")
 
 require("lazy").setup({
   { import = "cfg.themery" },

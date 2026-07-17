@@ -9,6 +9,8 @@ return {
       haskell = { "fourmolu" },
       go = { "goimports", "gofmt" },
       markdown = { "markdownlint" },
+      verilog = { "verible-verilog-format" },
+      systemverilog = { "verible-verilog-format" },
     },
     format_on_save = function(bufnr)
       local ignore_filetypes = { "sql", "java", "c", "cpp" }
@@ -19,7 +21,7 @@ return {
       if disable_file then
         return
       end
-      return { timeout_ms = 500, lsp_fallback = true }
+      return { timeout_ms = 500, lsp_format = "fallback" }
     end,
   },
 }

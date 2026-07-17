@@ -8,7 +8,7 @@ lua/
 └── cfg/
     ├── init.lua                 top-level orchestration
     ├── core.lua                 editor settings
-    ├── lazy-vim.lua             bootstrap
+    ├── lazy-nvim.lua            lazy.nvim bootstrap
     ├── <plugin>.lua             one file per plugin spec
     └── lsp/                     LSP subsystem (self-contained)
         ├── init.lua             server configs + plugin imports
@@ -20,7 +20,7 @@ lua/
 
 - `lua/cfg/init.lua` — entry point, `require()` + `lazy.setup()`
 - `lua/cfg/core.lua` — editor settings, indent toggle
-- `lua/cfg/lazy-vim.lua` — lazy.nvim bootstrap
+- `lua/cfg/lazy-nvim.lua` — lazy.nvim bootstrap
 - `lua/cfg/themery.lua` — theme switcher
 - `lua/cfg/neo-tree.lua` — file tree
 - `lua/cfg/telescope.lua` — fuzzy finder
@@ -39,6 +39,7 @@ lua/
 - `lua/cfg/lsp/fidget.lua` — LSP progress
 - `lua/cfg/lsp/haskell.lua` — haskell-language-server
 - `lua/cfg/lsp/markdown.lua` — marksman
+- `lua/cfg/lsp/verilog.lua` — verible-verilog-ls
 
 ## Conventions
 
