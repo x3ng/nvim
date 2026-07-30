@@ -9,10 +9,11 @@ require("lazy").setup({
   { import = "cfg.telescope" },
   { import = "cfg.which-key" },
   { import = "cfg.flash" },
+  { import = "cfg.fcitx" },
   { import = "cfg.bufferline" },
   { import = "cfg.render-markdown" },
-  { import = "cfg.lsp.mason" },
-  { import = "cfg.lsp.conform" },
+  { import = "cfg.mason" },
+  { import = "cfg.format.conform" },
   { import = "cfg.lsp.trouble" },
   { import = "cfg.lsp.fidget" },
 })

@@ -3,7 +3,9 @@ vim.g.mapleader = "\\"
 vim.g.maplocalleader = "\\"
 
 vim.opt.autoread = true -- auto-reload files changed externally
-vim.opt.clipboard = 'unnamedplus' -- use system clipboard
+if vim.fn.executable("wl-copy") == 1 or vim.fn.executable("xclip") == 1 or vim.fn.executable("xsel") == 1 then
+  vim.opt.clipboard = "unnamedplus" -- use system clipboard when a provider is available
+end
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 vim.opt.mouse = 'a' -- allow the mouse to be used in nvim
 

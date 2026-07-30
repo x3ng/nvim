@@ -1,8 +1,15 @@
 require("cfg.lsp.lsp-config")
 
-require("cfg.lsp.python")
-require("cfg.lsp.lua")
-require("cfg.lsp.cc")
-require("cfg.lsp.haskell")
-require("cfg.lsp.markdown")
-require("cfg.lsp.verilog")
+vim.filetype.add({
+  extension = {
+    v = "verilog",
+  },
+})
+
+for name, config in pairs(require("cfg.lsp.servers")) do
+  local lsp_config = vim.deepcopy(config)
+  lsp_config.mason = nil
+
+  vim.lsp.config(name, lsp_config)
+  vim.lsp.enable(name)
+end
