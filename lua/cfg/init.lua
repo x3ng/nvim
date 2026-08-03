@@ -3,6 +3,7 @@ require("cfg.lsp")
 require("cfg.lazy-nvim")
 
 require("lazy").setup({
+  { import = "cfg.transparent" },
   { import = "cfg.themery" },
   { import = "cfg.neo-tree" },
   { import = "cfg.blink-cmp" },

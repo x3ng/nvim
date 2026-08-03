@@ -28,6 +28,7 @@ lua/
 - `lua/cfg/lazy-nvim.lua` — lazy.nvim bootstrap
 - `lua/cfg/mason.lua` — Mason installer backend for LSP servers and formatter tools
 - `lua/cfg/themery.lua` — theme switcher
+- `lua/cfg/transparent.lua` — transparent background controller
 - `lua/cfg/neo-tree.lua` — file tree
 - `lua/cfg/telescope.lua` — fuzzy finder
 - `lua/cfg/blink-cmp.lua` — completion
