@@ -31,6 +31,7 @@ lua/
 - `lua/cfg/transparent.lua` — transparent background controller
 - `lua/cfg/neo-tree.lua` — file tree
 - `lua/cfg/telescope.lua` — fuzzy finder
+- `lua/cfg/toggleterm.lua` — terminal manager
 - `lua/cfg/blink-cmp.lua` — completion
 - `lua/cfg/bufferline.lua` — buffer tabs
 - `lua/cfg/render-markdown.lua` — markdown renderer

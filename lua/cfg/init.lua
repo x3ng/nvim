@@ -8,6 +8,7 @@ require("lazy").setup({
   { import = "cfg.neo-tree" },
   { import = "cfg.blink-cmp" },
   { import = "cfg.telescope" },
+  { import = "cfg.toggleterm" },
   { import = "cfg.which-key" },
   { import = "cfg.flash" },
   { import = "cfg.fcitx" },

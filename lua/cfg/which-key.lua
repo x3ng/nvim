@@ -4,6 +4,7 @@ return {
     spec = {
       { "<leader>f", group = "file/find" },
       { "<leader>b", group = "buffer" },
+      { "<leader>t", group = "terminal" },
     },
   },
 }

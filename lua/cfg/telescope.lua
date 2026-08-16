@@ -5,6 +5,8 @@ return {
     { "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "Find files" },
     { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Find buffers" },
     { "<leader>fg", "<cmd>Telescope live_grep<CR>", desc = "Live grep" },
+    { "<leader>fc", "<cmd>Telescope commands<CR>", desc = "Commands" },
+    { "<leader>f:", "<cmd>Telescope command_history<CR>", desc = "Command history" },
   },
   opts = {
     defaults = {
