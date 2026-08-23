@@ -26,8 +26,6 @@ local function toggle_indent()
   vim.notify(string.format("toggle indent to %d ", current_indent), vim.log.levels.INFO)
 end
 
-vim.keymap.set("n", "<leader>ti", toggle_indent, { desc = "Toggle Indent (2/4)" })
-
 vim.api.nvim_create_user_command("SetIndent", function(opts)
   local size = tonumber(opts.args)
   if not size then
@@ -47,12 +45,18 @@ end, {
 })
 
 -- UI config
-vim.opt.number = true -- show absolute number
-vim.opt.relativenumber = true -- add numbers to each line on the left side
-vim.opt.cursorline = true -- highlight cursor line underneath the cursor horizontally
-vim.opt.splitbelow = true -- open new vertical split bottom
-vim.opt.splitright = true -- open new horizontal splits right
-vim.opt.termguicolors = true -- enable 24-bit RGB color in the TUI
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.cursorline = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.termguicolors = true
+
+-- Radical space saving
+vim.opt.cmdheight = 0
+vim.opt.laststatus = 3
+vim.opt.showtabline = 0
+vim.opt.showmode = false
 
 -- Searching
 vim.opt.incsearch = true
@@ -65,5 +69,17 @@ vim.keymap.set("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer", silent = tru
 vim.keymap.set("n", "[b", "<cmd>bprev<CR>", { desc = "Prev buffer", silent = true })
 vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer", silent = true })
 
--- Inlay hints (Neovim 0.11+)
-vim.lsp.inlay_hint.enable(true)
+-- Basic editing
+vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save", silent = true })
+vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit", silent = true })
+vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All", silent = true })
+vim.keymap.set("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File", silent = true })
+
+-- UI toggles
+vim.keymap.set("n", "<leader>uh", "<cmd>nohlsearch<cr>", { desc = "Clear Highlight", silent = true })
+vim.keymap.set("n", "<leader>uw", function() vim.opt.wrap = not vim.opt.wrap:get() end, { desc = "Toggle Wrap" })
+vim.keymap.set("n", "<leader>ul", function() vim.opt.relativenumber = not vim.opt.relativenumber:get() end, { desc = "Toggle Relative Number" })
+vim.keymap.set("n", "<leader>uc", function() vim.opt.cursorline = not vim.opt.cursorline:get() end, { desc = "Toggle Cursorline" })
+
+-- Indent toggle
+vim.keymap.set("n", "<leader>ti", toggle_indent, { desc = "Toggle Indent (2/4)" })

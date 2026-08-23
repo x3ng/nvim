@@ -4,24 +4,22 @@ return {
   opts = {
     modes = {
       char = {
-        jump_labels = true, -- f/t 增强：按 f + 字符后自动出 label
+        jump_labels = true,
       },
     },
   },
   keys = {
     {
-      "<leader>s",
+      "<leader><leader>",
       mode = { "n", "x", "o" },
       function() require("flash").jump() end,
-      desc = "Flash jump",
+      desc = "Flash Jump",
     },
     {
       "S",
       mode = { "n", "x", "o" },
-      function() require("flash").jump({
-        search = { mode = function(str) return "\\<" .. str end },
-      }) end,
-      desc = "Flash jump (word start)",
+      function() require("flash").jump({ search = { mode = function(str) return "\\<" .. str end } }) end,
+      desc = "Flash Jump (word start)",
     },
   },
 }
