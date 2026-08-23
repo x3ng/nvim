@@ -41,27 +41,10 @@ return {
       "--clang-tidy",
       "--header-insertion=iwyu",
       "--completion-style=bundled",
+      "--format-style=file",
     },
     filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
     root_markers = { ".clangd", ".clang-tidy", ".clang-format", "compile_commands.json", ".git" },
-  },
-
-  hls = {
-    -- Mason installs HLS via ghcup. If ghcup is unavailable, prefer PATH-provided HLS.
-    mason = vim.fn.executable("ghcup") == 1,
-    cmd = { "haskell-language-server-wrapper", "--lsp" },
-    filetypes = { "haskell", "lhaskell", "cabal" },
-    root_markers = { "stack.yaml", "cabal.project", "hie.yaml", "*.cabal", ".git" },
-    settings = {
-      haskell = {
-        formattingProvider = "fourmolu",
-        plugin = {
-          tactics = {
-            config = { auto_gas = 3 },
-          },
-        },
-      },
-    },
   },
 
   marksman = {

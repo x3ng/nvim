@@ -5,6 +5,7 @@ require("cfg.lazy-nvim")
 require("lazy").setup({
   { import = "cfg.transparent" },
   { import = "cfg.themery" },
+  { import = "cfg.treesitter" },
   { import = "cfg.neo-tree" },
   { import = "cfg.blink-cmp" },
   { import = "cfg.telescope" },
@@ -18,4 +19,6 @@ require("lazy").setup({
   { import = "cfg.format.conform" },
   { import = "cfg.lsp.trouble" },
   { import = "cfg.lsp.fidget" },
+  { import = "cfg.lazydev" },
+  { import = "cfg.gitsigns" },
 })

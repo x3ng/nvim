@@ -1,6 +1,6 @@
 -- Hint: use `:h <option>` to figure out the meaning if needed
-vim.g.mapleader = "\\"
-vim.g.maplocalleader = "\\"
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 vim.opt.autoread = true -- auto-reload files changed externally
 if vim.fn.executable("wl-copy") == 1 or vim.fn.executable("xclip") == 1 or vim.fn.executable("xsel") == 1 then
@@ -55,7 +55,15 @@ vim.opt.splitright = true -- open new horizontal splits right
 vim.opt.termguicolors = true -- enable 24-bit RGB color in the TUI
 
 -- Searching
-vim.opt.incsearch = true -- search as characters are entered
-vim.opt.hlsearch = false -- do not highlight matches
-vim.opt.ignorecase = true -- ignore case in searches by default
-vim.opt.smartcase = true -- but make it case sensitive if an uppercase is entered
+vim.opt.incsearch = true
+vim.opt.hlsearch = false
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+-- Buffer navigation
+vim.keymap.set("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer", silent = true })
+vim.keymap.set("n", "[b", "<cmd>bprev<CR>", { desc = "Prev buffer", silent = true })
+vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer", silent = true })
+
+-- Inlay hints (Neovim 0.11+)
+vim.lsp.inlay_hint.enable(true)

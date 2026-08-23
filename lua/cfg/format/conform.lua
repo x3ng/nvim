@@ -13,12 +13,10 @@ return {
       markdown = { "markdownlint" },
       verilog = { "verible-verilog-format" },
       systemverilog = { "verible-verilog-format" },
+      c = { "clangd" },
+      cpp = { "clangd" },
     },
     format_on_save = function(bufnr)
-      local ignore_filetypes = { "sql", "java", "c", "cpp" }
-      if vim.tbl_contains(ignore_filetypes, vim.bo[bufnr].filetype) then
-        return
-      end
       local disable_file = vim.fs.find(".noformat", { path = vim.api.nvim_buf_get_name(bufnr), upward = true })[1]
       if disable_file then
         return

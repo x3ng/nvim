@@ -8,6 +8,7 @@ return {
   dependencies = {
     "xzbdmw/colorful-menu.nvim",
     "rafamadriz/friendly-snippets",
+    "folke/lazydev.nvim",
   },
   version = "1.*",
   event = { "InsertEnter", "CmdlineEnter" },
@@ -66,6 +67,13 @@ return {
     },
     sources = {
       default = { "lsp", "path", "snippets", "buffer" },
+      providers = {
+        lazydev = {
+          name = "lazydev",
+          module = "lazydev.integrations.blink",
+          score_offset = 100,
+        },
+      },
     },
   },
   opts_extend = { "sources.default" },

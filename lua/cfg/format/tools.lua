@@ -5,4 +5,5 @@ return {
   "prettier",
   "prettierd",
   "stylua",
+  "clangd",
 }

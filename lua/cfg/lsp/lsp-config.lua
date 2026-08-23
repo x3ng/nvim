@@ -19,6 +19,9 @@ vim.diagnostic.config({
   float = { border = "rounded" },
 })
 
+-- Inlay hints (Neovim 0.11+)
+vim.lsp.inlay_hint.enable(true)
+
 -- lsp keymap
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
