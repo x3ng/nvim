@@ -1,3 +1,8 @@
+-- Load order matters:
+--   1. core    — leader keys and options must exist before anything maps to them
+--   2. lsp     — registers vim.lsp.config/enable() early; runs BEFORE mason
+--                extends PATH, hence the mason bin-dir probe in cfg/lsp/init.lua
+--   3. lazy-nvim then hands off to lazy.setup() for all plugin specs
 require("cfg.core")
 require("cfg.lsp")
 require("cfg.lazy-nvim")

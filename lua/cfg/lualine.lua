@@ -23,7 +23,7 @@ return {
             local reg = vim.fn.reg_recording()
             return reg ~= "" and "REC @" .. reg or ""
           end,
-          color = { fg = "black", bg = "#e0af68" },
+          color = "WarningMsg", -- semantic hl group: stays correct across themes
         },
       },
       lualine_y = { "progress" },

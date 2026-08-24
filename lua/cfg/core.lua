@@ -6,8 +6,8 @@ vim.opt.autoread = true -- auto-reload files changed externally
 if vim.fn.executable("wl-copy") == 1 or vim.fn.executable("xclip") == 1 or vim.fn.executable("xsel") == 1 then
   vim.opt.clipboard = "unnamedplus" -- use system clipboard when a provider is available
 end
-vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
-vim.opt.mouse = 'a' -- allow the mouse to be used in nvim
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.mouse = "a" -- allow the mouse to be used in nvim
 
 -- Tab / Indent
 vim.opt.tabstop = 4 -- number of visual spaces per TAB
@@ -17,12 +17,16 @@ vim.opt.expandtab = true -- tabs are spaces, mainly because of Python
 
 local current_indent = 4
 
-local function toggle_indent()
-  current_indent = current_indent == 4 and 2 or 4
-  vim.opt.shiftwidth = current_indent
-  vim.opt.tabstop = current_indent
-  vim.opt.softtabstop = current_indent
+local function apply_indent(size)
+  current_indent = size
+  vim.opt.shiftwidth = size
+  vim.opt.tabstop = size
+  vim.opt.softtabstop = size
   vim.opt.expandtab = true
+end
+
+local function toggle_indent()
+  apply_indent(current_indent == 4 and 2 or 4)
   vim.notify(string.format("toggle indent to %d ", current_indent), vim.log.levels.INFO)
 end
 
@@ -32,11 +36,7 @@ vim.api.nvim_create_user_command("SetIndent", function(opts)
     vim.notify("Please input a number", vim.log.levels.ERROR)
     return
   end
-  current_indent = size
-  vim.opt.shiftwidth = size
-  vim.opt.tabstop = size
-  vim.opt.softtabstop = size
-  vim.opt.expandtab = true
+  apply_indent(size)
   vim.notify(string.format("set indent to %d ", size), vim.log.levels.INFO)
 end, {
   desc = "Set indent size",
@@ -80,15 +80,10 @@ vim.keymap.set("n", "[b", "<cmd>bprev<CR>", { desc = "Prev buffer", silent = tru
 vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer", silent = true })
 
 -- Window navigation
-local window_nav = {
-  ["<C-h"] = "h",
-  ["<C-j"] = "j",
-  ["<C-k"] = "k",
-  ["<C-l"] = "l",
-}
-for lhs, dir in pairs(window_nav) do
-  vim.keymap.set("n", lhs .. ">", "<C-w>" .. dir, { desc = "Window " .. dir, silent = true })
-end
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Window left", silent = true })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Window down", silent = true })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Window up", silent = true })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Window right", silent = true })
 
 -- Basic editing
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save", silent = true })

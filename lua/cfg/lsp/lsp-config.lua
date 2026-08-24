@@ -37,8 +37,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
     vim.keymap.set("n", "<leader>cf", function() vim.lsp.buf.format({ async = true }) end, opts)
-    vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
-    vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
+    -- [d / ]d diagnostic jumps are built-in since Neovim 0.12
     vim.keymap.set("n", "<leader>df", function() vim.diagnostic.show() end, opts)
 
     vim.keymap.set("n", "<leader>lr", function()
