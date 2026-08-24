@@ -13,8 +13,7 @@ return {
       markdown = { "markdownlint" },
       verilog = { "verible-verilog-format" },
       systemverilog = { "verible-verilog-format" },
-      c = { "clangd" },
-      cpp = { "clangd" },
+      -- c/cpp: clangd formats via lsp_format fallback below
     },
     format_on_save = function(bufnr)
       local disable_file = vim.fs.find(".noformat", { path = vim.api.nvim_buf_get_name(bufnr), upward = true })[1]

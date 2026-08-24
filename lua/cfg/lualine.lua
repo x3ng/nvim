@@ -15,13 +15,19 @@ return {
       lualine_c = {
         { "filename", path = 1, symbols = { modified = "●", readonly = "🔒", unnamed = "[No Name]" } },
       },
-      lualine_x = {},
+      lualine_x = {
+        {
+          -- cmdheight=0 hides vim's native "recording @q" message; surface it
+          -- here instead. Zero-width when not recording.
+          function()
+            local reg = vim.fn.reg_recording()
+            return reg ~= "" and "REC @" .. reg or ""
+          end,
+          color = { fg = "black", bg = "#e0af68" },
+        },
+      },
       lualine_y = { "progress" },
       lualine_z = { "location" },
-    },
-    inactive_sections = {
-      lualine_c = { { "filename", path = 1 } },
-      lualine_x = { "location" },
     },
     extensions = { "oil", "lazy", "mason" },
   },

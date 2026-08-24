@@ -17,6 +17,6 @@ require("lazy").setup({
   { import = "cfg.oil" },
   { import = "cfg.snacks" },
   { import = "cfg.lualine" },
-  { import = "cfg.noice" },
   { import = "cfg.which-key" },
+  { import = "cfg.ts-comments" },
 })

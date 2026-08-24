@@ -12,7 +12,7 @@ return {
       { "<leader>h", group = "Hunk (Git)" },
       { "<leader>t", group = "Terminal/Tree" },
       { "<leader>u", group = "UI Toggle" },
-      { "<leader>w", group = "Window/Buffer" },
+      { "<leader>b", group = "Buffer" },
       { "<leader>", group = "Flash/Scratch" },
       { "]", group = "Next" },
       { "[", group = "Prev" },

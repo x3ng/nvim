@@ -52,6 +52,16 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.termguicolors = true
 
+-- Persistence
+vim.opt.undofile = true -- persistent undo across sessions
+
+-- Yank highlight
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = vim.api.nvim_create_augroup("UserYank", { clear = true }),
+  desc = "Highlight yanked text",
+  callback = function() vim.hl.on_yank() end,
+})
+
 -- Radical space saving
 vim.opt.cmdheight = 0
 vim.opt.laststatus = 3
@@ -68,6 +78,17 @@ vim.opt.smartcase = true
 vim.keymap.set("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer", silent = true })
 vim.keymap.set("n", "[b", "<cmd>bprev<CR>", { desc = "Prev buffer", silent = true })
 vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer", silent = true })
+
+-- Window navigation
+local window_nav = {
+  ["<C-h"] = "h",
+  ["<C-j"] = "j",
+  ["<C-k"] = "k",
+  ["<C-l"] = "l",
+}
+for lhs, dir in pairs(window_nav) do
+  vim.keymap.set("n", lhs .. ">", "<C-w>" .. dir, { desc = "Window " .. dir, silent = true })
+end
 
 -- Basic editing
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save", silent = true })

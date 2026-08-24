@@ -5,5 +5,6 @@ return {
   "prettier",
   "prettierd",
   "stylua",
-  "clangd",
+  "fourmolu",
+  "tree-sitter-cli",
 }
