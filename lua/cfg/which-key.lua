@@ -6,6 +6,7 @@ return {
     delay = 300,
     spec = {
       { "<leader>f", group = "Find/Search" },
+      { "<leader>s", group = "Search & Replace" },
       { "<leader>g", group = "Git" },
       { "<leader>x", group = "Diagnostics" },
       { "<leader>c", group = "Code/LSP" },
@@ -13,6 +14,7 @@ return {
       { "<leader>t", group = "Terminal/Tree" },
       { "<leader>u", group = "UI Toggle" },
       { "<leader>b", group = "Buffer" },
+      { "<leader>q", group = "Quit/Session" },
       { "<leader>", group = "Flash/Scratch" },
       { "]", group = "Next" },
       { "[", group = "Prev" },

@@ -6,7 +6,8 @@ return {
     picker = {
       enabled = true,
       layout = {
-        preset = "telescope",
+        -- no `preset` here: snacks skips preset resolution as soon as a custom
+        -- `layout` is given, so a preset next to it is dead config
         layout = {
           box = "horizontal",
           width = 0.9,
@@ -29,6 +30,18 @@ return {
       },
     },
     explorer = { enabled = false },
+    dashboard = {
+      enabled = true,
+      sections = {
+        { section = "header" },
+        { section = "keys", gap = 1, padding = 1 },
+        { title = "Recent", section = "recent_files", limit = 6, padding = 1 },
+        { title = "Projects", section = "projects", limit = 6, padding = 1 },
+        -- restored from persistence.nvim (see cfg/persistence.lua)
+        { title = "Sessions", section = "session", padding = 1 },
+        { section = "startup" },
+      },
+    },
     notifier = {
       enabled = true,
       timeout = 3000,
@@ -50,7 +63,6 @@ return {
       enabled = true,
       win = {
         position = "float",
-        border = "rounded",
         width = 0.9,
         height = 0.8,
       },
@@ -83,15 +95,6 @@ return {
     },
     statuscolumn = {
       enabled = true,
-      left = { "mark", "sign" },
-      right = { "fold", "git" },
-      folds = {
-        open = false,
-        git_hl = false,
-      },
-      git = {
-        patterns = { "GitSign" },
-      },
     },
     win = {
       enabled = true,
@@ -104,6 +107,10 @@ return {
     },
   },
   keys = {
+    -- Theme picking needs a picker, so it lives here instead of in the
+    -- plugin-free base layer (see cfg/base/theme.lua)
+    { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorscheme (live preview)" },
+
     -- Picker (replaces telescope)
     { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
     { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },

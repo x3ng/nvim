@@ -41,7 +41,9 @@ return {
       "--clang-tidy",
       "--header-insertion=iwyu",
       "--completion-style=bundled",
-      "--format-style=file",
+      -- clangd logs every TU/stdlib lookup to stderr by default; that ended up
+      -- as ~750k lines inside ~/.local/state/nvim/lsp.log
+      "--log=error",
     },
     filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
     root_markers = { ".clangd", ".clang-tidy", ".clang-format", "compile_commands.json", ".git" },
