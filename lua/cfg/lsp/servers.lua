@@ -1,22 +1,11 @@
 return {
-  pyright = {
-    mason = true,
-    cmd = { "pyright-langserver", "--stdio" },
+  ty = {
+    cmd = { "ty", "server" },
     filetypes = { "python" },
-    root_markers = { "pyproject.toml", "setup.py", ".git" },
-    settings = {
-      python = {
-        analysis = {
-          typeCheckingMode = "basic",
-          autoSearchPaths = true,
-          useLibraryCodeForTypes = true,
-        },
-      },
-    },
+    root_markers = { "ty.toml", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" },
   },
 
   lua_ls = {
-    mason = true,
     cmd = { "lua-language-server" },
     filetypes = { "lua" },
     root_markers = { ".luarc.json", ".luacheckrc", ".git" },
@@ -34,7 +23,6 @@ return {
   },
 
   clangd = {
-    mason = true,
     cmd = {
       "clangd",
       "--background-index",
@@ -50,14 +38,12 @@ return {
   },
 
   marksman = {
-    mason = true,
     cmd = { "marksman" },
     filetypes = { "markdown" },
     root_markers = { ".marksman.toml", ".git" },
   },
 
   verible = {
-    mason = true,
     cmd = { "verible-verilog-ls" },
     filetypes = { "verilog", "systemverilog" },
     root_markers = {
@@ -68,15 +54,13 @@ return {
   },
 
   rust_analyzer = {
-    mason = true,
     cmd = { "rust-analyzer" },
     filetypes = { "rust" },
     root_markers = { "Cargo.toml", "rust-project.json", ".git" },
   },
 
-  vtsls = {
-    mason = true,
-    cmd = { "vtsls", "--stdio" },
+  ts_ls = {
+    cmd = { "typescript-language-server", "--stdio" },
     filetypes = {
       "javascript",
       "javascriptreact",
@@ -89,5 +73,55 @@ return {
       "jsconfig.json",
       ".git",
     },
+  },
+
+  nil_ls = {
+    cmd = { "nil" },
+    filetypes = { "nix" },
+    root_markers = { "flake.nix", ".git" },
+  },
+
+  jsonls = {
+    cmd = { "vscode-json-language-server", "--stdio" },
+    filetypes = { "json", "jsonc" },
+    root_markers = { ".git" },
+    init_options = { provideFormatter = true },
+  },
+
+  html = {
+    cmd = { "vscode-html-language-server", "--stdio" },
+    filetypes = { "html" },
+    root_markers = { "package.json", ".git" },
+    init_options = {
+      provideFormatter = true,
+      embeddedLanguages = { css = true, javascript = true },
+      configurationSection = { "html", "css", "javascript" },
+    },
+  },
+
+  cssls = {
+    cmd = { "vscode-css-language-server", "--stdio" },
+    filetypes = { "css", "scss", "less" },
+    root_markers = { "package.json", ".git" },
+    init_options = { provideFormatter = true },
+  },
+
+  yamlls = {
+    cmd = { "yaml-language-server", "--stdio" },
+    filetypes = { "yaml", "yaml.docker-compose", "yaml.gitlab", "yaml.helm-values" },
+    root_markers = { ".git" },
+    settings = { redhat = { telemetry = { enabled = false } } },
+  },
+
+  taplo = {
+    cmd = { "taplo", "lsp", "stdio" },
+    filetypes = { "toml" },
+    root_markers = { ".taplo.toml", "taplo.toml", ".git" },
+  },
+
+  bashls = {
+    cmd = { "bash-language-server", "start" },
+    filetypes = { "bash", "sh" },
+    root_markers = { ".git" },
   },
 }

@@ -1,20 +1,24 @@
-local lsp_servers = {}
 local format_tools = require("cfg.format.tools")
+local missing_lsp_servers = require("cfg.lsp")
+local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
 
-for name, config in pairs(require("cfg.lsp.servers")) do
-  if config.mason ~= false then
-    table.insert(lsp_servers, name)
-  end
+local function available(bin)
+  return vim.fn.executable(bin) == 1 or vim.uv.fs_stat(mason_bin .. "/" .. bin) ~= nil
 end
 
-table.sort(lsp_servers)
+local missing_format_tools = {}
+for _, name in ipairs(format_tools) do
+  local bin = name == "tree-sitter-cli" and "tree-sitter" or name
+  if not available(bin) then table.insert(missing_format_tools, name) end
+end
 
--- Guard against drift between what conform uses (cfg.format.conform) and what
--- mason installs (format_tools). Formatters outside this list are silently
--- unavailable on hosts without them otherwise.
+-- Guard against drift between what conform uses and what Mason installs.
+-- Formatters supplied by Nix or a language toolchain are listed as exceptions.
 local exceptions = {
   gofmt = "ships with the Go toolchain",
-  goimports = "ships with the Go toolchain",
+  goimports = "optional project tool; Mason requires Go to install it",
+  nixfmt = "provided by the Nix configuration",
+  rustfmt = "provided by the Rust toolchain",
   ["verible-verilog-format"] = "installed via the LSP package 'verible'",
 }
 
@@ -42,7 +46,7 @@ end
 if #unhandled > 0 then
   vim.schedule(function()
     vim.notify(
-      "Formatters used by conform but not installed via mason:\n  "
+      "Formatters used by conform without a managed source:\n  "
         .. table.concat(unhandled, "\n  ")
         .. "\nAdd them to lua/cfg/format/tools.lua or document them as exceptions.",
       vim.log.levels.WARN,
@@ -72,15 +76,15 @@ return {
       "neovim/nvim-lspconfig",
     },
     opts = {
-      ensure_installed = lsp_servers,
-      automatic_enable = false,
+      ensure_installed = missing_lsp_servers,
+      automatic_enable = missing_lsp_servers,
     },
   },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = format_tools,
+      ensure_installed = missing_format_tools,
     },
   },
 }

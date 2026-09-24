@@ -23,6 +23,7 @@ require("lazy").setup({
   { import = "cfg.gitsigns" },
   { import = "cfg.oil" },
   { import = "cfg.snacks" },
+  { import = "cfg.noice" },
   { import = "cfg.lualine" },
   { import = "cfg.which-key" },
   { import = "cfg.ts-comments" },
