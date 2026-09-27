@@ -22,6 +22,7 @@ require("lazy").setup({
   { import = "cfg.lazydev" },
   { import = "cfg.gitsigns" },
   { import = "cfg.oil" },
+  { import = "cfg.aerial" },
   { import = "cfg.snacks" },
   { import = "cfg.noice" },
   { import = "cfg.lualine" },

@@ -42,6 +42,7 @@ lua/
 - `lua/cfg/persistence.lua` — session save/load (`<leader>qs`)
 - `lua/cfg/fcitx.lua` — input method auto-switch
 - `lua/cfg/oil.lua` — file manager
+- `lua/cfg/aerial.lua` — on-demand symbol outline (`<leader>co`)
 - `lua/cfg/snacks.lua` — picker, terminal, notifier, lazygit, statuscolumn, etc.
 - `lua/cfg/noice.lua` — floating command input and responsive output matching the editor background; Snacks renders other notifications, Blink handles command completion
 - `lua/cfg/lualine.lua` — single-line global statusline (+ macro recording indicator)
@@ -69,6 +70,7 @@ lua/
 - Formatter configuration lives under `lua/cfg/format/`
 - Themes: browse with `<leader>uC` (Snacks picker, live preview); picked theme persists to state dir, `default` in `cfg/base/theme.lua` is the factory fallback; `<leader>ut` toggles transparency
 - LSP keymaps: 0.12 built-ins stay authoritative (`gr*` family, `K`, `<C-s>`, `gO`); this config only adds `gd`/`gD`, `<leader>df` (diagnostics float), `<leader>uh` (inlay hints), `<leader>lr` (`:lsp restart`)
+- Outline: `<leader>co` toggles Aerial's symbol sidebar; `<leader>cs` opens the existing symbol picker for quick jumps
 - `<leader>s` groups search & replace (`sr` grug-far, `sw`/`sb`/`sv` prefill, `st` TODOs); `<leader>q` groups sessions (`qs` load, `qS` select, `ql` last, `qd` stop)
 - Filetypes: `.cu` uses the `cuda` parser; `.v`/`.vh` reuse `systemverilog` via `vim.treesitter.language.register`
 - `lua/cfg/treesitter.lua`'s `ensure_installed` is the single source of truth for parsers — missing ones are installed automatically on startup
