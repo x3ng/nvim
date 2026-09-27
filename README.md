@@ -43,7 +43,7 @@ lua/
 - `lua/cfg/fcitx.lua` — input method auto-switch
 - `lua/cfg/oil.lua` — file manager
 - `lua/cfg/snacks.lua` — picker, terminal, notifier, lazygit, statuscolumn, etc.
-- `lua/cfg/noice.lua` — floating command input and output; Snacks renders other notifications, Blink handles command completion
+- `lua/cfg/noice.lua` — floating command input and responsive output matching the editor background; Snacks renders other notifications, Blink handles command completion
 - `lua/cfg/lualine.lua` — single-line global statusline (+ macro recording indicator)
 - `lua/cfg/gitsigns.lua` — git gutter and hunks
 - `lua/cfg/render-markdown.lua` — markdown renderer
