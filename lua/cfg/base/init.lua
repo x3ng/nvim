@@ -77,9 +77,12 @@ vim.opt.showtabline = 0
 vim.opt.showmode = false
 
 -- Reading/editing defaults (nvim's own defaults are still Vim-era here)
-vim.opt.wrap = false -- code wraps visually and breaks `j`/`k`; `z`/`<leader>uw` when needed
+vim.opt.wrap = true -- soft-wrap instead of scrolling sideways (stable viewport)
+vim.opt.linebreak = true -- break on word boundaries, not mid-word
+vim.opt.breakindent = true -- wrapped continuation keeps the original indent
+vim.opt.smoothscroll = true -- <C-d>/<C-u>/<C-f>/<C-b> move by screen line, not buffer line
 vim.opt.scrolloff = 8 -- keep context around the cursor
-vim.opt.sidescrolloff = 8
+vim.opt.sidescrolloff = 8 -- only kicks in when `wrap` is toggled off
 vim.opt.splitkeep = "screen" -- text stays put when splitting/closing windows
 vim.opt.signcolumn = "yes" -- stable gutter: no layout shift when signs appear
 vim.opt.pumheight = 12 -- completion menu height
