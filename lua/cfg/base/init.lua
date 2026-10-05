@@ -33,33 +33,22 @@ vim.opt.softtabstop = 4 -- number of spaces in tab when editing
 vim.opt.shiftwidth = 4 -- insert 4 spaces on a tab
 vim.opt.expandtab = true -- tabs are spaces, mainly because of Python
 
-local current_indent = 4
-
-local function apply_indent(size)
-  current_indent = size
-  vim.opt.shiftwidth = size
-  vim.opt.tabstop = size
-  vim.opt.softtabstop = size
-  vim.opt.expandtab = true
-end
-
-local function toggle_indent()
-  apply_indent(current_indent == 4 and 2 or 4)
-  vim.notify(string.format("toggle indent to %d ", current_indent), vim.log.levels.INFO)
-end
-
 vim.api.nvim_create_user_command("SetIndent", function(opts)
-  local size = tonumber(opts.args)
-  if not size then
-    vim.notify("Please input a number", vim.log.levels.ERROR)
+  local args = opts.fargs
+  local style = #args == 1 and "space" or args[1]
+  local size = tonumber(args[#args])
+  if #args > 2 or (style ~= "space" and style ~= "tab") or not size or size < 1 or size > 16 or size % 1 ~= 0 then
+    vim.notify("Usage: SetIndent [space|tab] <width 1..16>", vim.log.levels.ERROR)
     return
   end
-  apply_indent(size)
-  vim.notify(string.format("set indent to %d ", size), vim.log.levels.INFO)
+  vim.bo.shiftwidth = size
+  vim.bo.tabstop = size
+  vim.bo.softtabstop = -1 -- follow shiftwidth
+  vim.bo.expandtab = style == "space"
 end, {
-  desc = "Set indent size",
-  nargs = 1,
-  complete = function() return { "2", "4", "8" } end
+  desc = "Set current buffer indent style and width",
+  nargs = "+",
+  complete = function() return { "2", "4", "8", "space", "tab" } end
 })
 
 -- ── UI ───────────────────────────────────────────────────────────────────────
@@ -75,6 +64,7 @@ vim.opt.cmdheight = 0
 vim.opt.laststatus = 3
 vim.opt.showtabline = 0
 vim.opt.showmode = false
+vim.opt.shortmess:append("W") -- Quiet successful writes; write errors still show.
 
 -- Reading/editing defaults (nvim's own defaults are still Vim-era here)
 vim.opt.wrap = true -- soft-wrap instead of scrolling sideways (stable viewport)
@@ -105,7 +95,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- ── Buffer navigation ────────────────────────────────────────────────────────
 vim.keymap.set("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer", silent = true })
 vim.keymap.set("n", "[b", "<cmd>bprev<CR>", { desc = "Prev buffer", silent = true })
-vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer", silent = true })
 
 -- ── Window navigation ────────────────────────────────────────────────────────
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Window left", silent = true })
@@ -115,20 +104,15 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Window right", silent = true })
 
 -- ── Basic editing ────────────────────────────────────────────────────────────
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save", silent = true })
-vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit", silent = true })
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All", silent = true })
 vim.keymap.set("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File", silent = true })
 
 -- ── UI toggles ───────────────────────────────────────────────────────────────
 -- `<leader>uh` (inlay hints) belongs to the LSP layer; see cfg/lsp/lsp-config.lua
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear Highlight", silent = true })
-vim.keymap.set("n", "<leader>uH", "<cmd>nohlsearch<cr>", { desc = "Clear Highlight", silent = true })
 vim.keymap.set("n", "<leader>uw", function() vim.wo.wrap = not vim.wo.wrap end, { desc = "Toggle Wrap" })
 vim.keymap.set("n", "<leader>ul", function() vim.wo.relativenumber = not vim.wo.relativenumber end, { desc = "Toggle Relative Number" })
 vim.keymap.set("n", "<leader>uc", function() vim.wo.cursorline = not vim.wo.cursorline end, { desc = "Toggle Cursorline" })
-
--- Indent toggle
-vim.keymap.set("n", "<leader>ti", toggle_indent, { desc = "Toggle Indent (2/4)" })
 
 -- Theme selection, persistence and transparency
 -- (`<leader>uC` for browsing colorschemes lives in cfg/snacks.lua: it needs a picker)

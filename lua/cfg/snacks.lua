@@ -24,12 +24,39 @@ return {
         },
       },
       sources = {
-        files = { hidden = true, follow = true },
+        -- Navigation should include files regardless of Git ignore rules.
+        files = { hidden = true, ignored = true, follow = true },
+        explorer = {
+          hidden = true,
+          ignored = true,
+          follow = true,
+          exclude = { ".git" },
+          auto_close = true,
+          jump = { close = true },
+          -- Replace the global two-column layout: the tree gets the full width,
+          -- with an optional preview below it for narrow tmux panes.
+          layout = function()
+            return {
+              preview = false,
+              layout = {
+                box = "vertical",
+                width = 0.9,
+                height = 0.85,
+                border = "rounded",
+                title = "{title}",
+                title_pos = "center",
+                { win = "input", height = 1, border = "bottom" },
+                { win = "list", border = "none" },
+                { win = "preview", height = 0.4, border = "top" },
+              },
+            }
+          end,
+        },
         grep = { hidden = true },
         buffers = { sort_lastused = true },
       },
     },
-    explorer = { enabled = false },
+    explorer = { enabled = true },
     dashboard = {
       enabled = true,
       sections = {
@@ -66,9 +93,6 @@ return {
         width = 0.9,
         height = 0.8,
       },
-    },
-    diagnostics = {
-      enabled = true,
     },
     indent = {
       enabled = true,
@@ -107,18 +131,21 @@ return {
     },
   },
   keys = {
+    { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer (keep layout)" },
     -- Theme picking needs a picker, so it lives here instead of in the
     -- plugin-free base layer (see cfg/base/theme.lua)
     { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorscheme (live preview)" },
 
     -- Picker (replaces telescope)
     { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+    { "<leader>fe", function() Snacks.explorer() end, desc = "File Explorer" },
     { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
     { "<leader>fg", function() Snacks.picker.grep() end, desc = "Live Grep" },
     { "<leader>fc", function() Snacks.picker.commands() end, desc = "Commands" },
     { "<leader>fh", function() Snacks.picker.help() end, desc = "Help Tags" },
     { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent Files" },
     { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
+    { "<leader>fD", function() Snacks.picker.diagnostics_buffer() end, desc = "Buffer Diagnostics" },
     { "<leader>fs", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
     { "<leader>fS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
     { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
@@ -133,7 +160,6 @@ return {
 
     -- Terminal (replaces toggleterm)
     { "<C-\\>", function() Snacks.terminal() end, desc = "Toggle Terminal", mode = { "n", "t" } },
-    { "<leader>tt", function() Snacks.terminal() end, desc = "Terminal" },
     { "<leader>th", function() Snacks.terminal({ win = { position = "bottom", height = 0.3 } }) end, desc = "Horizontal Terminal" },
     { "<leader>tv", function() Snacks.terminal({ win = { position = "right", width = 0.4 } }) end, desc = "Vertical Terminal" },
 
@@ -149,19 +175,13 @@ return {
     { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
     { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff" },
 
-    -- Diagnostics (replaces trouble)
-    { "<leader>xx", function() Snacks.diagnostics.open() end, desc = "Diagnostics" },
-    { "<leader>xX", function() Snacks.diagnostics.open({ bufnr = 0 }) end, desc = "Buffer Diagnostics" },
-    { "<leader>cs", function() Snacks.picker.lsp_symbols() end, desc = "Symbols" },
-    { "<leader>cl", function() Snacks.picker.lsp_references() end, desc = "LSP References" },
-
     -- Notifier (replaces fidget)
-    { "<leader>n", function() Snacks.notifier.show_history() end, desc = "Notification History" },
+    { "<leader>nh", function() Snacks.notifier.show_history() end, desc = "Notification History" },
     { "<leader>nd", function() Snacks.notifier.hide() end, desc = "Dismiss Notifications" },
 
     -- Words (LSP references highlight)
-    { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
-    { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
+    { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference" },
+    { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference" },
 
     -- Scratch buffers
     { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },

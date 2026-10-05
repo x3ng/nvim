@@ -36,7 +36,6 @@ return {
     },
   },
   keys = {
-    { "<leader>e", "<cmd>Oil<cr>", desc = "Oil (cwd)" },
-    { "<leader>E", "<cmd>Oil .<cr>", desc = "Oil (file dir)" },
+    { "<leader>ce", "<cmd>Oil<cr>", desc = "Edit Directory (Oil)" },
   },
 }
