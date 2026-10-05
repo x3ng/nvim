@@ -47,7 +47,7 @@ lua/
 - `lua/cfg/noice.lua` — command input overlays the statusline; output uses one theme-matched split buffer; Snacks renders other notifications, Blink handles command completion
 - `lua/cfg/lualine.lua` — single-line global statusline (+ macro recording indicator)
 - `lua/cfg/gitsigns.lua` — git gutter and hunks
-- `lua/cfg/render-markdown.lua` — markdown renderer
+- `lua/cfg/markdown-preview.lua` — local browser preview server for Markdown; Neovim keeps source view with Tree-sitter highlighting
 - `lua/cfg/lazydev.lua` — nvim Lua dev support
 - `lua/cfg/which-key.lua` — key hints
 - `lua/cfg/format/conform.lua` — formatter
@@ -74,5 +74,6 @@ lua/
 - File operations: `<leader>ce` edits the current file's directory with Oil; references use native `grr`; terminal toggles with `<C-\>`; notifications use `<leader>nh`/`nd`
 - Editing: indentation follows EditorConfig or file detection; `:SetIndent [space|tab] <width>` overrides the current buffer. `<leader>w` saves, `<leader>qq` quits all; native `<C-w>q` closes a window
 - `<leader>s` groups search & replace (`sr` grug-far, `sw`/`sb`/`sv` prefill, `st` TODOs); `<leader>q` groups sessions (`qs` load, `qS` select, `ql` last, `qd` stop)
+- Markdown: Neovim stays in highlighted source view; `<leader>mp` starts/stops the browser preview at `localhost:8080`
 - Filetypes: `.cu` uses the `cuda` parser; `.v`/`.vh` reuse `systemverilog` via `vim.treesitter.language.register`
 - `lua/cfg/treesitter.lua`'s `ensure_installed` is the single source of truth for parsers — missing ones are installed automatically on startup

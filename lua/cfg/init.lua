@@ -16,7 +16,7 @@ require("lazy").setup({
   { import = "cfg.surround" },
   { import = "cfg.flash" },
   { import = "cfg.fcitx" },
-  { import = "cfg.render-markdown" },
+  { import = "cfg.markdown-preview" },
   { import = "cfg.mason" },
   { import = "cfg.format.conform" },
   { import = "cfg.lazydev" },
