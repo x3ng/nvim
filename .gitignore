@@ -2,3 +2,6 @@
 .claude/
 .codex/
 /nvim.log
+# Local artifacts from the removed internal-input trial (not used by config).
+/.rime/
+/vendor/rime.vim/

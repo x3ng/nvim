@@ -16,9 +16,14 @@ return {
     keymap = {
       ["<Up>"] = { "select_prev", "fallback" },
       ["<Down>"] = { "select_next", "fallback" },
-      ["<C-U>"] = { "scroll_documentation_up", "fallback" },
-      ["<C-D>"] = { "scroll_documentation_down", "fallback" },
-      ["<C-e>"] = { "hide", "fallback" },
+      ["<C-u>"] = false,
+      ["<C-d>"] = false,
+      ["<C-e>"] = false,
+      ["<C-b>"] = false,
+      ["<C-f>"] = false,
+      ["<C-n>"] = false,
+      ["<C-p>"] = false,
+      ["<C-k>"] = false,
       ["<CR>"] = { "accept", "fallback" },
       ["<Tab>"] = {
         "snippet_forward",
@@ -58,6 +63,14 @@ return {
       enabled = true,
     },
     cmdline = {
+      keymap = {
+        preset = "cmdline",
+        ["<C-a>"] = false, ["<C-e>"] = false,
+        ["<C-b>"] = false, ["<C-f>"] = false,
+        ["<C-d>"] = false, ["<C-k>"] = false,
+        ["<C-n>"] = false, ["<C-p>"] = false,
+        ["<C-u>"] = false,
+      },
       completion = {
         list = { selection = { preselect = false } },
         menu = {

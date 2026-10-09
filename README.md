@@ -41,6 +41,8 @@ lua/
 - `lua/cfg/grug-far.lua` — project-wide search & replace (`<leader>sr`)
 - `lua/cfg/persistence.lua` — session save/load (`<leader>qs`)
 - `lua/cfg/fcitx.lua` — input method auto-switch
+- `lua/cfg/readline.lua` — shared Insert and command-line Readline editing keys; see `docs/readline.md`
+- Noice: routine messages expire after 2.5 seconds; errors, shell output, and messages of 4+ lines stay in a split without taking focus. `<leader>nm` opens editor message history; `<leader>nc` dismisses displayed messages without clearing history.
 - `lua/cfg/oil.lua` — filesystem editing (`<leader>ce`); browsing uses Snacks explorer
 - `lua/cfg/guess-indent.lua` — detect existing file indentation while respecting EditorConfig
 - `lua/cfg/snacks.lua` — picker, terminal, notifier, lazygit, statuscolumn, etc.

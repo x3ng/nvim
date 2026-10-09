@@ -5,6 +5,22 @@ return {
   opts = {
     picker = {
       enabled = true,
+      win = {
+        input = {
+          keys = {
+            -- In Insert, inherit Readline text editing instead of picker actions.
+            -- Keep the original actions available in Normal mode.
+            ["<c-a>"] = { "select_all", mode = "n" },
+            ["<c-b>"] = { "preview_scroll_up", mode = "n" },
+            ["<c-d>"] = { "list_scroll_down", mode = "n" },
+            ["<c-f>"] = { "preview_scroll_down", mode = "n" },
+            ["<c-k>"] = { "list_up", mode = "n" },
+            ["<c-u>"] = { "list_scroll_up", mode = "n" },
+            ["<a-d>"] = { "inspect", mode = "n" },
+            ["<a-f>"] = { "toggle_follow", mode = "n" },
+          },
+        },
+      },
       layout = {
         -- no `preset` here: snacks skips preset resolution as soon as a custom
         -- `layout` is given, so a preset next to it is dead config
@@ -125,6 +141,12 @@ return {
     },
     input = {
       enabled = true,
+      win = {
+        keys = {
+          i_ctrl_p = { "<c-p>", "hist_up", mode = "i" },
+          i_ctrl_n = { "<c-n>", "hist_down", mode = "i" },
+        },
+      },
     },
     image = {
       enabled = true,

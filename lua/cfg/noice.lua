@@ -7,9 +7,9 @@ return {
   opts = {
     cmdline = { enabled = true, view = "cmdline" },
     messages = {
-      view = "cmdline_output",
+      view = "mini",
       view_error = "cmdline_output",
-      view_warn = "cmdline_output",
+      view_warn = "notify",
       view_history = "messages",
     },
     views = {
@@ -22,7 +22,7 @@ return {
       -- All output views inherit the editor's live theme groups.
       split = {
         size = "25%",
-        enter = true,
+        enter = false,
         win_options = {
           winhighlight = {
             Normal = "Normal",
@@ -33,16 +33,34 @@ return {
       },
       -- Shell output can arrive in chunks. Avoid repeating metadata/commands
       -- between chunks; keep the detailed format available in message history.
-      cmdline_output = { format = { "{message}" } },
+      cmdline_output = { format = { "{message}" }, enter = false },
+      -- Only an explicit history command should move focus to messages.
+      messages = { enter = true },
+      mini = { timeout = 2500, focusable = false },
     },
     routes = {
-      -- Use one route/options set for all output. Noice otherwise creates
-      -- separate split instances for shell output and ordinary messages.
+      {
+        filter = { event = "msg_show", error = true },
+        view = "cmdline_output",
+        opts = { merge = true, title = "Messages" },
+      },
+      -- Shell output stays readable even when delivered in short chunks.
+      {
+        filter = { event = "msg_show", kind = { "shell_out", "shell_err" } },
+        view = "cmdline_output",
+        opts = { merge = true, title = "Messages" },
+      },
+      -- Keep substantial output; routine editing/save reports use mini instead.
       {
         filter = {
           event = "msg_show",
+          min_height = 4,
           ["not"] = {
-            kind = { "confirm", "confirm_sub", "number_prompt", "return_prompt", "search_count" },
+            any = {
+              { kind = { "confirm", "confirm_sub", "number_prompt", "return_prompt", "search_count" } },
+              { error = true },
+              { warning = true },
+            },
           },
         },
         view = "cmdline_output",
@@ -57,5 +75,9 @@ return {
       signature = { enabled = false },
       message = { enabled = false },
     },
+  },
+  keys = {
+    { "<leader>nm", "<cmd>Noice history<cr>", desc = "Editor Message History" },
+    { "<leader>nc", "<cmd>Noice dismiss<cr>", desc = "Dismiss Editor Messages" },
   },
 }
