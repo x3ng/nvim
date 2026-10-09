@@ -181,7 +181,7 @@ return {
     { "<leader>fz", function() Snacks.picker.zoxide() end, desc = "Zoxide" },
 
     -- Terminal (replaces toggleterm)
-    { "<C-\\>", function() Snacks.terminal() end, desc = "Toggle Terminal", mode = { "n", "t" } },
+    { "<C-/>", function() Snacks.terminal() end, desc = "Toggle Terminal", mode = { "n", "t" } },
     { "<leader>th", function() Snacks.terminal({ win = { position = "bottom", height = 0.3 } }) end, desc = "Horizontal Terminal" },
     { "<leader>tv", function() Snacks.terminal({ win = { position = "right", width = 0.4 } }) end, desc = "Vertical Terminal" },
 

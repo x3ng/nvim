@@ -73,7 +73,7 @@ lua/
 - Themes: browse with `<leader>uC` (Snacks picker, live preview); picked theme persists to state dir, `default` in `cfg/base/theme.lua` is the factory fallback; `<leader>ut` toggles transparency
 - LSP keymaps: 0.12 built-ins stay authoritative (`gr*` family, `K`, `<C-s>`, `gO`); this config only adds `gd`/`gD`, `<leader>df` (diagnostics float), `<leader>uh` (inlay hints), `<leader>lr` (`:lsp restart`)
 - Navigation: Snacks floating pickers only — `ff` files, `fe` directory tree, `fb` buffers, `fs` document symbols, `fS` workspace symbols, `fd` diagnostics, `fD` buffer diagnostics (all with `<leader>`); file/symbol selection closes the picker
-- File operations: `<leader>ce` edits the current file's directory with Oil; references use native `grr`; terminal toggles with `<C-\>`; notifications use `<leader>nh`/`nd`
+- File operations: `<leader>ce` edits the current file's directory with Oil; references use native `grr`; terminal toggles with `<C-/>`; notifications use `<leader>nh`/`nd`
 - Editing: indentation follows EditorConfig or file detection; `:SetIndent [space|tab] <width>` overrides the current buffer. `<leader>w` saves, `<leader>qq` quits all; native `<C-w>q` closes a window
 - `<leader>s` groups search & replace (`sr` grug-far, `sw`/`sb`/`sv` prefill, `st` TODOs); `<leader>q` groups sessions (`qs` load, `qS` select, `ql` last, `qd` stop)
 - Markdown: Neovim stays in highlighted source view; `<leader>mp` starts/stops the browser preview at `localhost:8080`
