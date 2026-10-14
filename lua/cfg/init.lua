@@ -5,6 +5,7 @@
 --   3. lazy-nvim then hands off to lazy.setup() for all plugin specs
 require("cfg.base")
 require("cfg.lsp")
+require("cfg.format.cpp-indent").setup()
 require("cfg.lazy-nvim")
 
 require("lazy").setup({

@@ -5,6 +5,7 @@ local ensure_installed = {
   "lua",
   "python",
   "rust",
+  "go",
   "c",
   "cpp",
   "cuda", -- .cu has its own filetype; the c/cpp parsers do not cover it

@@ -59,6 +59,35 @@ return {
     root_markers = { "Cargo.toml", "rust-project.json", ".git" },
   },
 
+  -- gopls drives workspace loading through the `go` command, so a Go
+  -- toolchain should be on PATH (gofmt ships with it too)
+  gopls = {
+    cmd = { "gopls", "serve" },
+    filetypes = { "go", "gomod", "gowork", "gotmpl" },
+    root_markers = { "go.work", "go.mod", ".git" },
+    settings = {
+      gopls = {
+        staticcheck = true,
+        gofumpt = false, -- conform owns gofmt/goimports (<leader>cf)
+        analyses = {
+          unusedparams = true,
+          nilness = true,
+          shadow = true,
+          unusedwrite = true,
+          useany = true,
+        },
+        hints = {
+          assignVariableTypes = true,
+          compositeLiteralFields = true,
+          compositeLiteralTypes = true,
+          constantValues = true,
+          parameterNames = true,
+          rangeVariableTypes = true,
+        },
+      },
+    },
+  },
+
   ts_ls = {
     cmd = { "typescript-language-server", "--stdio" },
     filetypes = {

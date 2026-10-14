@@ -47,7 +47,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     map("<leader>df", function() vim.diagnostic.open_float({ scope = "cursor" }) end, "Diagnostics Float")
 
-    -- formatting is owned by conform (<leader>cf / <leader>uf); calling
+    -- formatting is owned by conform (<leader>cf); calling
     -- vim.lsp.buf.format here would silently bypass it
     map("<leader>uh", function()
       local on = not vim.lsp.inlay_hint.is_enabled({ bufnr = buf })

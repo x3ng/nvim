@@ -16,7 +16,6 @@ end
 -- Formatters supplied by Nix or a language toolchain are listed as exceptions.
 local exceptions = {
   gofmt = "ships with the Go toolchain",
-  goimports = "optional project tool; Mason requires Go to install it",
   nixfmt = "provided by the Nix configuration",
   rustfmt = "provided by the Rust toolchain",
   ["verible-verilog-format"] = "installed via the LSP package 'verible'",

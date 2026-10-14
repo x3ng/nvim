@@ -6,5 +6,6 @@ return {
   "prettierd",
   "stylua",
   "fourmolu",
+  "goimports",
   "tree-sitter-cli",
 }

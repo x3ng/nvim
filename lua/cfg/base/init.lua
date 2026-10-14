@@ -45,6 +45,7 @@ vim.api.nvim_create_user_command("SetIndent", function(opts)
   vim.bo.tabstop = size
   vim.bo.softtabstop = -1 -- follow shiftwidth
   vim.bo.expandtab = style == "space"
+  vim.b.manual_indent = true -- preserve this choice against automatic indent detection
 end, {
   desc = "Set current buffer indent style and width",
   nargs = "+",
