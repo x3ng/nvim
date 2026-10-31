@@ -1,5 +1,4 @@
--- Parsers are installed on demand; every entry here is also what the
--- FileType handler below can highlight/indent/fold.
+-- Explicitly install this parser set with :TSInstallConfigured.
 local ensure_installed = {
   -- languages in active use
   "lua",
@@ -47,13 +46,13 @@ return {
   config = function()
     require("nvim-treesitter").setup({})
 
-    -- install missing parsers (async, no-op if already installed)
-    local installed = require("nvim-treesitter").get_installed()
-    local missing = vim
-      .iter(ensure_installed)
-      :filter(function(lang) return not vim.list_contains(installed, lang) end)
-      :totable()
-    if #missing > 0 then require("nvim-treesitter").install(missing) end
+    vim.api.nvim_create_user_command("TSInstallConfigured", function()
+      local installed = require("nvim-treesitter").get_installed()
+      local missing = vim.iter(ensure_installed)
+        :filter(function(lang) return not vim.list_contains(installed, lang) end)
+        :totable()
+      if #missing > 0 then require("nvim-treesitter").install(missing) end
+    end, { desc = "Install missing parsers from the configured language list" })
 
     -- no `verilog` parser on main branch; reuse systemverilog for .v files
     vim.treesitter.language.register("systemverilog", "verilog")
@@ -61,9 +60,9 @@ return {
     -- Folds are window-local options (`vim.wo[bufnr]` does not exist), so they
     -- can only be set for the window that is current when the autocmd fires.
     local function apply_folds()
-      vim.wo.foldmethod = "expr"
-      vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-      vim.wo.foldlevel = 99 -- start fully expanded; za/zc/zR/zM on demand
+      if vim.wo.foldmethod ~= "expr" then vim.wo.foldmethod = "expr" end
+      local expr = "v:lua.vim.treesitter.foldexpr()"
+      if vim.wo.foldexpr ~= expr then vim.wo.foldexpr = expr end
     end
 
     local group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true })
@@ -75,7 +74,7 @@ return {
         if pcall(vim.treesitter.start, args.buf) then
           vim.b[args.buf].treesitter_started = true
           vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-          apply_folds()
+          if vim.api.nvim_get_current_buf() == args.buf then apply_folds() end
         end
       end,
     })

@@ -12,6 +12,10 @@ for _, name in ipairs(format_tools) do
   if not available(bin) then table.insert(missing_format_tools, name) end
 end
 
+-- Nix/project executables take precedence; Mason is an explicit fallback.
+-- mason-tool-installer accepts LSP names through mason-lspconfig integration.
+local missing_tools = vim.list_extend(vim.deepcopy(missing_format_tools), missing_lsp_servers)
+
 -- Guard against drift between what conform uses and what Mason installs.
 -- Formatters supplied by Nix or a language toolchain are listed as exceptions.
 local exceptions = {
@@ -55,6 +59,8 @@ if #unhandled > 0 then
 end
 
 return {
+  -- Server defaults must be available even when installation UI is not loaded.
+  { "neovim/nvim-lspconfig", lazy = false },
   {
     "williamboman/mason.nvim",
     opts = {
@@ -70,20 +76,23 @@ return {
   },
   {
     "mason-org/mason-lspconfig.nvim",
+    cmd = { "LspInstall", "LspUninstall" },
     dependencies = {
       "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",
     },
     opts = {
-      ensure_installed = missing_lsp_servers,
+      ensure_installed = {},
       automatic_enable = missing_lsp_servers,
     },
   },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
-    dependencies = { "williamboman/mason.nvim" },
+    cmd = { "MasonToolsInstall", "MasonToolsInstallSync", "MasonToolsUpdate", "MasonToolsUpdateSync" },
+    dependencies = { "williamboman/mason.nvim", "mason-org/mason-lspconfig.nvim" },
     opts = {
-      ensure_installed = missing_format_tools,
+      ensure_installed = missing_tools,
+      run_on_start = false,
     },
   },
 }

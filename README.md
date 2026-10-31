@@ -11,7 +11,7 @@ lua/
     │   ├── init.lua             options + editing keymaps
     │   └── theme.lua            colorscheme + transparency
     ├── lazy-nvim.lua            lazy.nvim bootstrap
-    ├── mason.lua                install missing language tools and check formatters
+    ├── mason.lua                explicit language-tool installation and formatter checks
     ├── <plugin>.lua             one file per plugin spec
     ├── format/                  formatter subsystem
     │   ├── conform.lua          formatter behavior
@@ -29,8 +29,8 @@ lua/
 - `lua/cfg/base/theme.lua` — colorscheme default + local persistence (`~/.local/state/nvim/user-theme`) and transparency (`user-transparent`)
 - `lua/cfg/themes/*.lua` — color plugin specs; each flavour is its own colorscheme name
 - `lua/cfg/lazy-nvim.lua` — lazy.nvim bootstrap
-- `lua/cfg/mason.lua` — install missing LSP servers, formatters and Tree-sitter CLI; formatter/tools drift check
-- `lua/cfg/treesitter.lua` — parser list (`ensure_installed`, auto-installs), highlighting, indentexpr, folds, textobjects (main branch API)
+- `lua/cfg/mason.lua` — explicit installation of missing LSP servers, formatters and Tree-sitter CLI; formatter/tools drift check
+- `lua/cfg/treesitter.lua` — parser list (`:TSInstallConfigured`), highlighting, indentexpr, folds, textobjects (main branch API)
 - `lua/cfg/treesitter-context.lua` — sticky function/class header
 - `lua/cfg/ts-comments.lua` — treesitter-driven commenting (`gc`)
 - `lua/cfg/todo-comments.lua` — TODO/FIXME highlighting + `]t`/`[t` jumps
@@ -68,17 +68,26 @@ lua/
 - LSP servers are declared once in `lua/cfg/lsp/servers.lua`; project, system and Mason binaries are all supported
 - Native `vim.lsp.config()` / `vim.lsp.enable()` owns runtime LSP setup
 - Formatter tools are declared once in `lua/cfg/format/tools.lua`
-- Mason installs only tools whose executables are absent from `PATH` and its own bin directory, then appends its bin directory to `PATH`
+- Mason appends its bin directory to `PATH`. `:MasonToolsInstall` explicitly installs tools found missing at startup; normal startup does not install tools or load the Mason LSP registry integration
 - Tools already in `PATH` take precedence over Mason-installed tools
-- Missing LSP servers are enabled when Mason finishes installing them
+- Missing LSP servers are enabled when the explicit installer finishes. After adding tools through Nix or changing a project environment, restart Neovim from that environment
 - Formatter configuration lives under `lua/cfg/format/`
 - Themes: browse with `<leader>uC` (Snacks picker, live preview); picked theme persists to state dir, `default` in `cfg/base/theme.lua` is the factory fallback; `<leader>ut` toggles transparency
 - LSP keymaps: 0.12 built-ins stay authoritative (`gr*` family, `K`, `<C-s>`, `gO`); this config only adds `gd`/`gD`, `<leader>df` (diagnostics float), `<leader>uh` (inlay hints), `<leader>lr` (`:lsp restart`)
 - Navigation: Snacks floating pickers only — `ff` files, `fe` directory tree, `fb` buffers, `fs` document symbols, `fS` workspace symbols, `fd` diagnostics, `fD` buffer diagnostics (all with `<leader>`); file/symbol selection closes the picker
 - File operations: `<leader>ce` edits the current file's directory with Oil; references use native `grr`; terminal toggles with `<C-/>`; notifications use `<leader>nh`/`nd`
-- Editing: indentation follows EditorConfig or file detection; C/C++ project clang-format settings take precedence when available. Without a project style, existing indentation is preserved; new C/C++ files use LLVM's default when clang-format is available. `:SetIndent [space|tab] <width>` overrides editing indentation for the current buffer; `:lua vim.b.manual_indent = nil` restores automatic detection on the next read/format.
+- Editing: indentation follows EditorConfig or file detection; C/C++ project clang-format settings take precedence when available. Resolution runs asynchronously; duplicate opening events are coalesced and stale results never override later edits or manual indentation. Without a project style, existing indentation is preserved; new C/C++ files use LLVM's default when clang-format is available. `:SetIndent [space|tab] <width>` overrides editing indentation for the current buffer; `:lua vim.b.manual_indent = nil` restores automatic detection on the next read/format.
 - Formatting is manual via `<leader>cf` (buffer or visual selection), using configured formatters with LSP fallback. Saving never formats; there are no autoformat toggles. After successful formatting, editing indentation is re-detected from the output unless `:SetIndent` pinned it. Manual formatting still uses formatter rules, which may differ from a pinned editing width. `<leader>w` saves, `<leader>qq` quits all; native `<C-w>q` closes a window
 - `<leader>s` groups search & replace (`sr` grug-far, `sw`/`sb`/`sv` prefill, `st` TODOs); `<leader>q` groups sessions (`qs` load, `qS` select, `ql` last, `qd` stop)
 - Markdown: Neovim stays in highlighted source view; `<leader>mp` starts/stops the browser preview at `localhost:8080`
 - Filetypes: `.cu` uses the `cuda` parser; `.v`/`.vh` reuse `systemverilog` via `vim.treesitter.language.register`
-- `lua/cfg/treesitter.lua`'s `ensure_installed` is the single source of truth for parsers — missing ones are installed automatically on startup
+- `lua/cfg/treesitter.lua`'s `ensure_installed` is the single source of truth for parsers — install missing ones explicitly with `:TSInstallConfigured`; reopen affected buffers after installation
+
+## Tool setup and checks
+
+- Prefer the project's `nix develop` environment or Nix-provided executables. Existing `PATH` tools take precedence; Mason is an optional fallback, not a second mandatory installation.
+- Run `:MasonToolsInstall` to install the configured missing LSP/formatter tools, or `:LspInstall <server>` for one server. Use `:Mason` to inspect installed packages. Tools without a Mason-managed source (such as `nixfmt`, `gofmt`, and `rustfmt`) still come from Nix/the language toolchain.
+- Run `:TSInstallConfigured` to install missing parsers, and `:TSUpdate` when explicitly updating them. Plugin builds may also run `:TSUpdate`.
+- In an affected project file, use `:checkhealth vim.lsp`, `:lua vim.print(vim.lsp.get_clients({bufnr = 0}))`, `:ConformInfo`, and `:checkhealth blink.cmp` to inspect attachment, roots, tools and completion.
+- nil's `nix.flake.autoArchive = false` disables fetching/prompting for missing flake inputs. Run `nix flake archive` manually when dependency-aware Nix completion is needed.
+- Folding starts expanded; returning to a window does not reset the user's fold level. `vim.print` retains its native behavior; use `Snacks.debug.inspect(...)` explicitly for Snacks debug output.

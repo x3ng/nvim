@@ -1,5 +1,6 @@
 local M = {}
 local filetypes = { c = true, cpp = true, objc = true, objcpp = true, cuda = true }
+local running, queued = {}, {}
 
 function M.sync(buf)
   if not vim.api.nvim_buf_is_valid(buf) then return end
@@ -9,8 +10,14 @@ function M.sync(buf)
 
   local name = vim.api.nvim_buf_get_name(buf)
   if name == "" then return end
+  local tick = vim.api.nvim_buf_get_changedtick(buf)
+  local previous = running[buf]
+  if previous and previous.name == name and previous.tick == tick then return end
+  -- Invalidate any result for an earlier name/content before checking eligibility.
+  running[buf] = nil
   local project_style = vim.fs.find({ ".clang-format", "_clang-format" }, {
-    path = vim.fs.dirname(name), upward = true,
+    path = vim.fs.dirname(name),
+    upward = true,
   })[1]
   if not project_style then
     -- Without a project style, preserve EditorConfig and existing indentation.
@@ -23,23 +30,46 @@ function M.sync(buf)
   end
   -- Ask clang-format to resolve parent configs, inheritance and language
   -- sections exactly as clangd does. LLVM is clangd's default fallback style.
-  local ok, result = pcall(function()
-    return vim.system({
-      "clang-format", "--style=file", "--fallback-style=LLVM",
-      "--assume-filename=" .. name, "--dump-config",
-    }, { text = true }):wait(500)
-  end)
+  local request = { name = name, tick = tick }
+  running[buf] = request
+  local ok = pcall(
+    vim.system,
+    {
+      "clang-format",
+      "--style=file",
+      "--fallback-style=LLVM",
+      "--assume-filename=" .. name,
+      "--dump-config",
+    },
+    { text = true, timeout = 1000 },
+    vim.schedule_wrap(function(result)
+      if running[buf] ~= request then return end
+      running[buf] = nil
+      -- Never overwrite a newer edit, rename, filetype or manual indent choice.
+      if
+        not vim.api.nvim_buf_is_valid(buf)
+        or vim.api.nvim_buf_get_name(buf) ~= name
+        or vim.api.nvim_buf_get_changedtick(buf) ~= tick
+        or vim.b[buf].manual_indent
+        or not filetypes[vim.bo[buf].filetype]
+        or vim.bo[buf].buftype ~= ""
+        or result.code ~= 0
+      then
+        return
+      end
+      local config = "\n" .. (result.stdout or "")
+      local width = tonumber(config:match("\nIndentWidth:%s*(%d+)"))
+      local tabs = tonumber(config:match("\nTabWidth:%s*(%d+)"))
+      local use_tab = config:match("\nUseTab:%s*(%S+)")
+      if not width or width < 1 or not tabs or tabs < 1 or not use_tab then return end
+      bo.shiftwidth = width
+      bo.tabstop = tabs
+      bo.softtabstop = -1
+      bo.expandtab = use_tab == "Never"
+    end)
+  )
   -- Invalid configs/missing tools leave EditorConfig and file detection intact.
-  if not ok or result.code ~= 0 then return end
-  local config = "\n" .. result.stdout
-  local width = tonumber(config:match("\nIndentWidth:%s*(%d+)"))
-  local tabs = tonumber(config:match("\nTabWidth:%s*(%d+)"))
-  local use_tab = config:match("\nUseTab:%s*(%S+)")
-  if not width or width < 1 or not tabs or tabs < 1 or not use_tab then return end
-  bo.shiftwidth = width
-  bo.tabstop = tabs
-  bo.softtabstop = -1
-  bo.expandtab = use_tab == "Never"
+  if not ok then running[buf] = nil end
 end
 
 function M.setup()
@@ -47,9 +77,14 @@ function M.setup()
     group = vim.api.nvim_create_augroup("UserCppIndent", { clear = true }),
     desc = "Match C/C++ editing indentation to clangd formatting",
     callback = function(args)
-      if not filetypes[vim.bo[args.buf].filetype] then return end
-      -- Run after ftplugins, EditorConfig and guess-indent have finished.
-      vim.schedule(function() M.sync(args.buf) end)
+      local buf = args.buf
+      if not filetypes[vim.bo[buf].filetype] or queued[buf] then return end
+      -- Coalesce opening events, then run after ftplugins and indent detection.
+      queued[buf] = true
+      vim.schedule(function()
+        queued[buf] = nil
+        M.sync(buf)
+      end)
     end,
   })
 end

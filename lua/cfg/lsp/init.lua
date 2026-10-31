@@ -19,8 +19,8 @@ end
 for name, config in pairs(require("cfg.lsp.servers")) do
   vim.lsp.config(name, config)
 
-  -- Use existing project/system/Mason binaries immediately. Mason installs
-  -- missing servers after startup and enables them when installation finishes.
+  -- Use existing project/system/Mason binaries immediately. Explicit Mason
+  -- installs enable missing servers when installation finishes.
   local bin = config.cmd and config.cmd[1]
   if bin and not installed(bin) then
     table.insert(missing, name)

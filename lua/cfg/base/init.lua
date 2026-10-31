@@ -75,6 +75,7 @@ vim.opt.smoothscroll = true -- <C-d>/<C-u>/<C-f>/<C-b> move by screen line, not 
 vim.opt.scrolloff = 8 -- keep context around the cursor
 vim.opt.sidescrolloff = 8 -- only kicks in when `wrap` is toggled off
 vim.opt.splitkeep = "screen" -- text stays put when splitting/closing windows
+vim.opt.foldlevel = 99 -- initially open folds; autocmds must not reset user changes
 vim.opt.signcolumn = "yes" -- stable gutter: no layout shift when signs appear
 vim.opt.pumheight = 12 -- completion menu height
 vim.opt.winborder = "rounded" -- one place to set borders for all floating windows (0.11+)

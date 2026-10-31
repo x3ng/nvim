@@ -108,6 +108,16 @@ return {
     cmd = { "nil" },
     filetypes = { "nix" },
     root_markers = { "flake.nix", ".git" },
+    settings = {
+      ["nil"] = {
+        nix = {
+          flake = {
+            -- Do not fetch missing inputs or prompt when opening Nix files.
+            autoArchive = false,
+          },
+        },
+      },
+    },
   },
 
   jsonls = {
