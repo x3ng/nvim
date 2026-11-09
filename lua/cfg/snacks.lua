@@ -155,7 +155,7 @@ return {
   keys = {
     { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer (keep layout)" },
     -- Theme picking needs a picker, so it lives here instead of in the
-    -- plugin-free base layer (see cfg/base/theme.lua)
+    -- plugin-free base layer (see cfg/standalone/theme.lua)
     { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorscheme (live preview)" },
 
     -- Picker (replaces telescope)

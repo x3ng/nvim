@@ -18,7 +18,7 @@ vim.diagnostic.config({
   severity_sort = true,
   -- show the diagnostic in a float while jumping with ]d/[d
   jump = { float = true },
-  -- no `float.border`: 'winborder' is set globally in cfg/base/init.lua
+  -- no `float.border`: 'winborder' is set globally in cfg/standalone/options.lua
 })
 
 -- Inlay hints (Neovim 0.11+), on by default; <leader>uh toggles per buffer

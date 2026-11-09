@@ -1,6 +1,9 @@
 # Emacs / Readline editing keys
 
-These mappings apply to Insert and command-line input. Normal mode keeps Vim's
+In standalone Neovim, these mappings apply to Insert and command-line input.
+In VSCode/VSCodium, Lua keeps only command-line mappings; the optional
+[host keybindings](vscode/keybindings.json) implement Insert editing using VSCode
+commands. See [the setup guide](vscode.md). Normal mode keeps Vim's
 editing and window commands. No extra runtime or build step is required.
 
 | Keys | Insert | Command line (`:`, `/`, `?`) |

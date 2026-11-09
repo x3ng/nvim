@@ -1,5 +1,7 @@
 local format_tools = require("cfg.format.tools")
-local missing_lsp_servers = require("cfg.lsp")
+-- Specs are evaluated even when lazy's cond disables the plugin. Do not start
+-- native language servers merely by reading the inventory inside VSCode.
+local missing_lsp_servers = vim.g.vscode and {} or require("cfg.lsp")
 local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
 
 local function available(bin)
@@ -46,7 +48,7 @@ for formatter in pairs(used) do
   end
 end
 
-if #unhandled > 0 then
+if not vim.g.vscode and #unhandled > 0 then
   vim.schedule(function()
     vim.notify(
       "Formatters used by conform without a managed source:\n  "

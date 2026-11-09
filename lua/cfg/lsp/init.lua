@@ -1,13 +1,5 @@
 require("cfg.lsp.lsp-config")
 
--- `.v` is already mapped to verilog by vim.filetype; only the header extension
--- is missing (`.sv`/`.svh` resolve to systemverilog out of the box)
-vim.filetype.add({
-  extension = {
-    vh = "verilog",
-  },
-})
-
 local missing = {}
 local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
 -- executable() alone isn't enough here: this runs before mason extends PATH,

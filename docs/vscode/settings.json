@@ -1,0 +1,6 @@
+{
+  "vscode-neovim.neovimExecutablePaths.linux": "/home/xen/.nix-profile/bin/nvim",
+  "vscode-neovim.neovimInitVimPaths.linux": "/home/xen/.config/nvim/init.lua",
+  "vscode-neovim.neovimClean": false,
+  "editor.lineNumbers": "relative"
+}

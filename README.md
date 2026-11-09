@@ -7,9 +7,10 @@ init.lua → require("cfg.init")
 lua/
 └── cfg/
     ├── init.lua                 top-level orchestration
-    ├── base/                    editor settings, keymaps, theme (no plugins)
-    │   ├── init.lua             options + editing keymaps
-    │   └── theme.lua            colorscheme + transparency
+    ├── core/                    shared options, editing keys, filetypes
+    ├── standalone/              standalone options, keymaps, theme
+    ├── vscode/                  vscode-neovim host settings + command bridges
+    ├── plugins.lua              complete plugin inventory (host-filtered with cond)
     ├── lazy-nvim.lua            lazy.nvim bootstrap
     ├── mason.lua                explicit language-tool installation and formatter checks
     ├── <plugin>.lua             one file per plugin spec
@@ -25,8 +26,11 @@ lua/
 ## Files
 
 - `lua/cfg/init.lua` — entry point, wires layers + `lazy.setup()`
-- `lua/cfg/base/init.lua` — options + editing keymaps (plugin-independent)
-- `lua/cfg/base/theme.lua` — colorscheme default + local persistence (`~/.local/state/nvim/user-theme`) and transparency (`user-transparent`)
+- `lua/cfg/core/` — shared leader, search, editing keys and filetypes (plugin-independent)
+- `lua/cfg/standalone/` — standalone UI, indentation, file watching, keymaps and theme
+- `lua/cfg/vscode/` — VSCode/VSCodium host settings and command bridges
+- `lua/cfg/plugins.lua` — full plugin inventory; the entry point allows only surround/repeat in VSCode
+- `lua/cfg/standalone/theme.lua` — colorscheme default + local persistence (`~/.local/state/nvim/user-theme`) and transparency (`user-transparent`)
 - `lua/cfg/themes/*.lua` — color plugin specs; each flavour is its own colorscheme name
 - `lua/cfg/lazy-nvim.lua` — lazy.nvim bootstrap
 - `lua/cfg/mason.lua` — explicit installation of missing LSP servers, formatters and Tree-sitter CLI; formatter/tools drift check
@@ -62,7 +66,9 @@ lua/
 
 ## Conventions
 
-- Two layers: `cfg.base/*` runs before plugins (no plugin dependencies allowed there); everything else is a lazy spec
+- Shared `cfg.core` loads first; `vim.g.vscode` selects `cfg.vscode` or `cfg.standalone`, then lazy loads the plugin inventory. Core has no plugin dependencies.
+- VSCode uses a plugin whitelist through lazy `cond`, retaining disabled plugins for standalone use. Specs must not trigger standalone services while being evaluated; explicit plugin `cond` functions must also respect the host.
+- VSCode/VSCodium setup, keybindings and verification: [docs/vscode.md](docs/vscode.md).
 - Everything under `cfg.` namespace — prevents require() shadowing plugins
 - One spec per file — add/remove = add/delete a file
 - LSP servers are declared once in `lua/cfg/lsp/servers.lua`; project, system and Mason binaries are all supported
@@ -72,10 +78,11 @@ lua/
 - Tools already in `PATH` take precedence over Mason-installed tools
 - Missing LSP servers are enabled when the explicit installer finishes. After adding tools through Nix or changing a project environment, restart Neovim from that environment
 - Formatter configuration lives under `lua/cfg/format/`
-- Themes: browse with `<leader>uC` (Snacks picker, live preview); picked theme persists to state dir, `default` in `cfg/base/theme.lua` is the factory fallback; `<leader>ut` toggles transparency
+- Themes: browse with `<leader>uC` (Snacks picker, live preview); picked theme persists to state dir, `default` in `cfg/standalone/theme.lua` is the factory fallback; `<leader>ut` toggles transparency
 - LSP keymaps: 0.12 built-ins stay authoritative (`gr*` family, `K`, `<C-s>`, `gO`); this config only adds `gd`/`gD`, `<leader>df` (diagnostics float), `<leader>uh` (inlay hints), `<leader>lr` (`:lsp restart`)
 - Navigation: Snacks floating pickers only — `ff` files, `fe` directory tree, `fb` buffers, `fs` document symbols, `fS` workspace symbols, `fd` diagnostics, `fD` buffer diagnostics (all with `<leader>`); file/symbol selection closes the picker
 - File operations: `<leader>ce` edits the current file's directory with Oil; references use native `grr`; terminal toggles with `<C-/>`; notifications use `<leader>nh`/`nd`
+- Explorer (`<leader>fe`): `l`/Enter expand directories or open files in Neovim; `h` collapses a directory, Backspace goes up, and `o` opens with a system application (Snacks defaults).
 - Editing: indentation follows EditorConfig or file detection; C/C++ project clang-format settings take precedence when available. Resolution runs asynchronously; duplicate opening events are coalesced and stale results never override later edits or manual indentation. Without a project style, existing indentation is preserved; new C/C++ files use LLVM's default when clang-format is available. `:SetIndent [space|tab] <width>` overrides editing indentation for the current buffer; `:lua vim.b.manual_indent = nil` restores automatic detection on the next read/format.
 - Formatting is manual via `<leader>cf` (buffer or visual selection), using configured formatters with LSP fallback. Saving never formats; there are no autoformat toggles. After successful formatting, editing indentation is re-detected from the output unless `:SetIndent` pinned it. Manual formatting still uses formatter rules, which may differ from a pinned editing width. `<leader>w` saves, `<leader>qq` quits all; native `<C-w>q` closes a window
 - `<leader>s` groups search & replace (`sr` grug-far, `sw`/`sb`/`sv` prefill, `st` TODOs); `<leader>q` groups sessions (`qs` load, `qS` select, `ql` last, `qd` stop)

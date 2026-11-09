@@ -1,16 +1,8 @@
--- Hint: use `:h <option>` to figure out the meaning if needed
--- This layer runs BEFORE any plugin is loaded, so it must stay plugin-free
--- (see README: "Conventions").
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
 -- ── Behaviour ────────────────────────────────────────────────────────────────
 vim.opt.autoread = true -- reload files changed on disk (needs checktime, see below)
 vim.opt.confirm = true -- ask to save instead of erroring on `:q` with unsaved changes
 vim.opt.undofile = true -- persistent undo across sessions
 vim.opt.updatetime = 250 -- faster CursorHold: gitsigns, diagnostics, hover
-vim.opt.timeoutlen = 300 -- leader/which-key popup latency
-vim.opt.jumpoptions = "stack" -- jumplist pushes a new entry per new jump
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.mouse = "a" -- allow the mouse to be used in nvim
 
@@ -81,11 +73,6 @@ vim.opt.pumheight = 12 -- completion menu height
 vim.opt.winborder = "rounded" -- one place to set borders for all floating windows (0.11+)
 vim.opt.fillchars:append({ eob = " ", diff = "╱" })
 
--- ── Searching ────────────────────────────────────────────────────────────────
-vim.opt.incsearch = true
-vim.opt.hlsearch = false
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
 
 -- ── Yank highlight ───────────────────────────────────────────────────────────
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -93,31 +80,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight yanked text",
   callback = function() vim.hl.on_yank() end,
 })
-
--- ── Buffer navigation ────────────────────────────────────────────────────────
-vim.keymap.set("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer", silent = true })
-vim.keymap.set("n", "[b", "<cmd>bprev<CR>", { desc = "Prev buffer", silent = true })
-
--- ── Window navigation ────────────────────────────────────────────────────────
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Window left", silent = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Window down", silent = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Window up", silent = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Window right", silent = true })
-
-require("cfg.readline").setup()
-
--- ── Basic editing ────────────────────────────────────────────────────────────
-vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save", silent = true })
-vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All", silent = true })
-vim.keymap.set("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File", silent = true })
-
--- ── UI toggles ───────────────────────────────────────────────────────────────
--- `<leader>uh` (inlay hints) belongs to the LSP layer; see cfg/lsp/lsp-config.lua
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear Highlight", silent = true })
-vim.keymap.set("n", "<leader>uw", function() vim.wo.wrap = not vim.wo.wrap end, { desc = "Toggle Wrap" })
-vim.keymap.set("n", "<leader>ul", function() vim.wo.relativenumber = not vim.wo.relativenumber end, { desc = "Toggle Relative Number" })
-vim.keymap.set("n", "<leader>uc", function() vim.wo.cursorline = not vim.wo.cursorline end, { desc = "Toggle Cursorline" })
-
--- Theme selection, persistence and transparency
--- (`<leader>uC` for browsing colorschemes lives in cfg/snacks.lua: it needs a picker)
-require("cfg.base.theme")
