@@ -40,6 +40,24 @@ return {
         },
       },
       sources = {
+        colorschemes = {
+          -- Keep preview changes out of persistence and restore synchronously
+          -- on close, so queued preview/restore callbacks cannot race a choice.
+          preview = function(ctx)
+            local picker = ctx.picker
+            picker.user_theme = picker.user_theme or { name = vim.g.colors_name or "default", background = vim.o.background }
+            require("cfg.standalone.theme").preview(ctx.item.text)
+            Snacks.picker.preview.file(ctx)
+          end,
+          on_close = function(picker)
+            local original = picker.user_theme
+            if original then require("cfg.standalone.theme").preview(original.name, original.background) end
+          end,
+          confirm = function(picker, item)
+            picker:close()
+            if item then vim.cmd.colorscheme(item.text) end
+          end,
+        },
         -- Navigation should include files regardless of Git ignore rules.
         files = { hidden = true, ignored = true, follow = true },
         explorer = {
@@ -148,39 +166,41 @@ return {
         },
       },
     },
-    image = {
-      enabled = true,
-    },
+    image = { enabled = true },
   },
   keys = {
+    -- Buffers and scratch
+    { "<leader>bb", function() Snacks.picker.buffers() end, desc = "Buffers" },
     { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer (keep layout)" },
+    { "<leader>bs", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
+    { "<leader>bS", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
     -- Theme picking needs a picker, so it lives here instead of in the
     -- plugin-free base layer (see cfg/standalone/theme.lua)
-    { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorscheme (live preview)" },
+    { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Choose Colorscheme" },
 
-    -- Picker (replaces telescope)
+    -- Files and projects
     { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
     { "<leader>fe", function() Snacks.explorer() end, desc = "File Explorer" },
-    { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
-    { "<leader>fg", function() Snacks.picker.grep() end, desc = "Live Grep" },
-    { "<leader>fc", function() Snacks.picker.commands() end, desc = "Commands" },
-    { "<leader>fh", function() Snacks.picker.help() end, desc = "Help Tags" },
     { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent Files" },
-    { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-    { "<leader>fD", function() Snacks.picker.diagnostics_buffer() end, desc = "Buffer Diagnostics" },
-    { "<leader>fs", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
-    { "<leader>fS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
-    { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
-    { "<leader>fm", function() Snacks.picker.marks() end, desc = "Marks" },
-    { "<leader>fj", function() Snacks.picker.jumps() end, desc = "Jumps" },
-    { "<leader>fl", function() Snacks.picker.loclist() end, desc = "Location List" },
-    { "<leader>fq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
-    { "<leader>f/", function() Snacks.picker.search_history() end, desc = "Search History" },
-    { "<leader>f:", function() Snacks.picker.command_history() end, desc = "Command History" },
     { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
-    { "<leader>fz", function() Snacks.picker.zoxide() end, desc = "Zoxide" },
 
-    -- Terminal (replaces toggleterm)
+    -- Search and pick
+    { "<leader>sg", function() Snacks.picker.grep() end, desc = "Live Grep" },
+    { "<leader>sc", function() Snacks.picker.commands() end, desc = "Commands" },
+    { "<leader>sh", function() Snacks.picker.help() end, desc = "Help Tags" },
+    { "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
+    { "<leader>sD", function() Snacks.picker.diagnostics_buffer() end, desc = "Buffer Diagnostics" },
+    { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
+    { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
+    { "<leader>sk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
+    { "<leader>sm", function() Snacks.picker.marks() end, desc = "Marks" },
+    { "<leader>sj", function() Snacks.picker.jumps() end, desc = "Jumps" },
+    { "<leader>sl", function() Snacks.picker.loclist() end, desc = "Location List" },
+    { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
+    { "<leader>s/", function() Snacks.picker.search_history() end, desc = "Search History" },
+    { "<leader>s:", function() Snacks.picker.command_history() end, desc = "Command History" },
+
+    -- Terminals
     { "<C-/>", function() Snacks.terminal() end, desc = "Toggle Terminal", mode = { "n", "t" } },
     { "<leader>th", function() Snacks.terminal({ win = { position = "bottom", height = 0.3 } }) end, desc = "Horizontal Terminal" },
     { "<leader>tv", function() Snacks.terminal({ win = { position = "right", width = 0.4 } }) end, desc = "Vertical Terminal" },
@@ -197,19 +217,12 @@ return {
     { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
     { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff" },
 
-    -- Notifier (replaces fidget)
+    -- Notifications (editor messages are owned by cfg.noice)
     { "<leader>nh", function() Snacks.notifier.show_history() end, desc = "Notification History" },
     { "<leader>nd", function() Snacks.notifier.hide() end, desc = "Dismiss Notifications" },
 
     -- Words (LSP references highlight)
     { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference" },
     { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference" },
-
-    -- Scratch buffers
-    { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
-    { "<leader>S", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
-
-    -- Profiler
-    { "<leader>ps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch" },
   },
 }

@@ -29,8 +29,8 @@ return {
       nix = { "nixfmt" },
       rust = { "rustfmt" },
       markdown = { "markdownlint" },
-      verilog = { "verible-verilog-format" },
-      systemverilog = { "verible-verilog-format" },
+      verilog = { "verible" },
+      systemverilog = { "verible" },
       -- c/cpp: clangd formats via lsp_format fallback below
     },
     default_format_opts = { lsp_format = "fallback" },

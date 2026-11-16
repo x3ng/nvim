@@ -13,3 +13,8 @@ require("lazy").setup(require("cfg.plugins"), {
   checker = { enabled = false },
   change_detection = { enabled = not vscode },
 })
+
+if not vscode then
+  require("cfg.standalone.theme").load()
+  require("cfg.dependencies").setup()
+end

@@ -1,5 +1,5 @@
 -- Project-wide search & replace with a live diff buffer (snacks only searches).
--- Needs ripgrep on PATH (present via nix profile).
+-- Needs ripgrep on PATH; provided by the project environment or Nix.
 return {
   "MagicDuck/grug-far.nvim",
   cmd = { "GrugFar", "GrugFarWithin" },

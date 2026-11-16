@@ -42,27 +42,28 @@ Tree-sitter textobjects and fcitx switching are not enabled in VSCode.
 
 ## Keys
 
-The leader is Space. VSCode commands replace these familiar operations:
+The leader is Space. The shared grouping and migration table are in
+[keymaps.md](keymaps.md). VSCode commands replace these familiar operations:
 
 | Keys | VSCode operation |
 | --- | --- |
 | `<leader>w`, `<leader>fn`, `<leader>bd` | Save, new untitled file, close editor |
 | `<leader>qq` | Close the VSCode window (normal unsaved-change prompts apply) |
 | `[b`, `]b`, Ctrl-h/j/k/l | Previous/next editor, navigate editor groups |
-| `<leader>ff`, `fe`, `fb`, `fg`, `fc` | Quick Open, Explorer, editors, search, command palette |
+| `<leader>ff`, `fe`, `bb`, `sg`, `sc` | Quick Open, Explorer, editors, search, command palette |
 | `<leader>fr` | Recent files/workspaces |
-| `<leader>fs`, `fS`, `fd`, `fk` | Document/workspace symbols, Problems, keyboard shortcuts |
+| `<leader>ss`, `sS`, `sd`, `sk` | Document/workspace symbols, Problems, keyboard shortcuts |
 | `<leader>sr` | Replace in files |
 | `<leader>cf` | Format document; in Visual mode, format selection |
 | `gd`, `gD`, `grr`, `gri`, `grt` | Definition, declaration, references, implementation, type definition |
 | `grn`, `gra`, `grx`, `gO`, `K` | Rename, quick fix, code lens, symbols, hover |
-| `[d`, `]d`, `<leader>df` | Previous/next diagnostic, hover with diagnostics |
+| `[d`, `]d`, `<leader>cd` | Previous/next diagnostic, hover with diagnostics |
 | `<leader>uw`, `ul`, `uc`, `uC`, `uh` | Wrap, relative numbers, line highlight, theme, inlay hints |
-| Ctrl-/, `<leader>gs`, `<leader>mp` | Terminal, source control, Markdown preview |
+| Ctrl-/, `<leader>gs`, `<leader>cp` | Terminal, source control, Markdown preview |
 
 Number, line-highlight and inlay-hint toggles update global VSCode settings; more specific
 workspace/language overrides may take precedence. Neovim-only features such as
-theme transparency, Oil directory editing, session management and picker-specific
+theme selection, Oil directory editing, session management and picker-specific
 keys have no host mapping. Native extension mappings handle other Vim operations.
 
 Normal-mode Ctrl keys above are forwarded by the extension's default settings.

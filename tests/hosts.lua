@@ -5,9 +5,12 @@ local function check()
   assert(vim.filetype.match({ filename = "module.vh" }) == "verilog")
   local config = require("lazy.core.config")
   assert(#config.spec.notifs == 0, vim.inspect(config.spec.notifs))
+  for _, key in ipairs({ "fb", "fg", "fc", "fs", "fS", "fd", "fk", "df", "lr", "mp", "ce" }) do
+    assert(vim.fn.maparg("<leader>" .. key, "n") == "", "Old leader mapping remains: " .. key)
+  end
   if vscode then
     assert(package.loaded["cfg.vscode"])
-    for _, name in ipairs({ "cfg.standalone", "cfg.lsp", "cfg.lsp.lsp-config", "cfg.format.cpp-indent", "cfg.standalone.theme" }) do
+    for _, name in ipairs({ "cfg.standalone", "cfg.lsp", "cfg.lsp.lsp-config", "cfg.format.cpp-indent", "cfg.standalone.theme", "cfg.dependencies" }) do
       assert(not package.loaded[name], "Standalone module leaked: " .. name)
     end
     assert(vim.fn.exists(":SetIndent") == 0)
@@ -34,9 +37,23 @@ local function check()
     invoke("<leader>cf")
     invoke("<leader>cf", "x")
     invoke("grr")
+    invoke("<leader>bb")
+    invoke("<leader>sg")
+    invoke("<leader>sc")
+    invoke("<leader>ss")
+    invoke("<leader>sS")
+    invoke("<leader>sd")
+    invoke("<leader>sk")
+    invoke("<leader>cd")
+    invoke("<leader>cp")
     assert(vim.deep_equal(calls, {
       "workbench.action.quickOpen", "editor.action.formatDocument",
       "editor.action.formatSelection", "editor.action.goToReferences",
+      "workbench.action.showAllEditors", "workbench.action.findInFiles",
+      "workbench.action.showCommands", "workbench.action.gotoSymbol",
+      "workbench.action.showAllSymbols", "workbench.actions.view.problems",
+      "workbench.action.openGlobalKeybindings", "editor.action.showHover",
+      "markdown.showPreviewToSide",
     }))
     invoke("<leader>ul")
     invoke("<leader>uc")

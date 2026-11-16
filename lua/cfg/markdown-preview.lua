@@ -11,7 +11,7 @@ return {
       group = vim.api.nvim_create_augroup("UserMarkdownPreview", { clear = true }),
       pattern = "markdown",
       callback = function(event)
-        vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", {
+        vim.keymap.set("n", "<leader>cp", "<cmd>MarkdownPreviewToggle<cr>", {
           buffer = event.buf,
           desc = "Toggle Markdown Browser Preview",
         })

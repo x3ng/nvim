@@ -13,6 +13,8 @@ return {
   version = "1.*",
   event = { "InsertEnter", "CmdlineEnter" },
   opts = {
+    -- Keep completion usable without downloading or building a native matcher.
+    fuzzy = { implementation = "lua" },
     keymap = {
       ["<Up>"] = { "select_prev", "fallback" },
       ["<Down>"] = { "select_next", "fallback" },

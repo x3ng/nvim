@@ -45,7 +45,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("gd", vim.lsp.buf.definition, "Goto Definition")
     map("gD", vim.lsp.buf.declaration, "Goto Declaration")
 
-    map("<leader>df", function() vim.diagnostic.open_float({ scope = "cursor" }) end, "Diagnostics Float")
+    map("<leader>cd", function() vim.diagnostic.open_float({ scope = "cursor" }) end, "Diagnostics Float")
 
     -- formatting is owned by conform (<leader>cf); calling
     -- vim.lsp.buf.format here would silently bypass it
@@ -57,6 +57,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     -- `vim.lsp.buf.restart()` does not exist anymore; `:lsp restart` is the
     -- built-in replacement (nvim-lspconfig's :LspRestart defers to it too)
-    map("<leader>lr", "<cmd>lsp restart<cr>", "Restart LSP")
+    map("<leader>cr", "<cmd>lsp restart<cr>", "Restart LSP")
   end,
 })
