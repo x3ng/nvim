@@ -10,7 +10,7 @@ local function check()
   end
   if vscode then
     assert(package.loaded["cfg.vscode"])
-    for _, name in ipairs({ "cfg.standalone", "cfg.lsp", "cfg.lsp.lsp-config", "cfg.format.cpp-indent", "cfg.standalone.theme", "cfg.dependencies" }) do
+    for _, name in ipairs({ "cfg.standalone", "cfg.lsp", "cfg.lsp.ui", "cfg.format.cpp-indent", "cfg.standalone.theme", "cfg.dependencies", "cfg.health" }) do
       assert(not package.loaded[name], "Standalone module leaked: " .. name)
     end
     assert(vim.fn.exists(":SetIndent") == 0)

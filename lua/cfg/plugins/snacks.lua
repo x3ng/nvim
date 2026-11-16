@@ -98,7 +98,7 @@ return {
         { section = "keys", gap = 1, padding = 1 },
         { title = "Recent", section = "recent_files", limit = 6, padding = 1 },
         { title = "Projects", section = "projects", limit = 6, padding = 1 },
-        -- restored from persistence.nvim (see cfg/persistence.lua)
+        -- restored from persistence.nvim (see cfg/plugins/persistence.lua)
         { title = "Sessions", section = "session", padding = 1 },
         { section = "startup" },
       },

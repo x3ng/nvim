@@ -36,7 +36,8 @@ Saving does not invoke a formatter from this Neovim configuration; VSCode's own
 
 The full lazy inventory is read in both hosts. A `cond` whitelist prevents
 standalone plugins from running without marking them for removal by `:Lazy clean`.
-Mason's spec is explicitly guarded against starting native LSP during evaluation.
+Plugin specs only declare configuration; reading them does not initialize native LSP.
+Standalone services are started explicitly by the root entry point after lazy setup.
 Only nvim-surround and vim-repeat are shared editing plugins for now. Flash,
 Tree-sitter textobjects and fcitx switching are not enabled in VSCode.
 

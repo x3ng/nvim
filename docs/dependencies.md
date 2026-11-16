@@ -8,9 +8,11 @@
 | --- | --- | --- |
 | UI、搜索、图片、安装工具及可选扩展 | [`lua/cfg/dependencies.lua`](../lua/cfg/dependencies.lua) 的 `tools` | 声明受影响功能、命令组合/回退、最低版本和 Nix 包名；启动检查和 health 共用 |
 | LSP | `lua/cfg/lsp/servers.lua` | health 读取现有注册表，检查 PATH 或 Mason 路径，不复制服务器名单 |
-| Formatter | `lua/cfg/format/conform.lua` | health 让 Conform 解析真实命令，包含项目本地工具和配置错误；安装来源仍由 `format/tools.lua` / Mason 管理 |
+| Formatter | `lua/cfg/format/formatters.lua` | Conform 与 health 共用这份选择表；health 让 Conform 解析真实命令，包含项目本地工具和配置错误；安装来源由 `format/tools.lua` / Mason 管理 |
 
 新增需要外部命令的功能时，必须同时更新相应声明。`startup = true` 表示缺失会影响已配置的日常功能，启动时提醒；安装阶段工具只在 health 中警告；`optional = true` 的图片扩展和渐进增强只显示说明，不要求全部安装。检查不会下载工具或悄悄关闭功能。
+
+声明与检测由 `cfg.dependencies` 提供；启动提醒、语言工具汇总和 Snacks 图片终端能力由 `cfg.health` 处理，通过根 `init.lua` 显式启动。安装器在加载时重新查询缺失项，不使用启动时缓存的缺失列表；PATH 工具优先，明确需要时再检查可执行的 Mason 路径。
 
 ## 补齐环境
 

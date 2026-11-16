@@ -8,7 +8,7 @@ local function check()
   end
   -- These actions are conditional in regular editing; check their real hooks.
   require("lazy").load({ plugins = { "gitsigns.nvim", "which-key.nvim" } })
-  require("cfg.gitsigns").opts.on_attach(vim.api.nvim_get_current_buf())
+  require("cfg.plugins.gitsigns").opts.on_attach(vim.api.nvim_get_current_buf())
   for _, group in ipairs({ "UserLspConfig", "UserMarkdownPreview" }) do
     local hooks = vim.api.nvim_get_autocmds({ group = group })
     assert(#hooks == 1)

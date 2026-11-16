@@ -1,6 +1,7 @@
 -- Run after init.lua with isolated XDG_STATE_HOME/XDG_CACHE_HOME.
 local function check()
   local deps = require("cfg.dependencies")
+  local health = require("cfg.health")
   local function by_id(results)
     local indexed = {}
     for _, result in ipairs(results) do indexed[result.tool.id] = result end
@@ -20,7 +21,7 @@ local function check()
 
   local messages, notify = {}, vim.notify
   vim.notify = function(message) messages[#messages + 1] = message end
-  local ok, err = pcall(deps.notify_missing, deps.inspect(resolve), false)
+  local ok, err = pcall(health.notify_missing, deps.inspect(resolve), false)
   vim.notify = notify
   assert(ok, err)
   assert(#messages == 1 and messages[1]:find("Live grep", 1, true))
@@ -37,7 +38,7 @@ local function check()
   vim.fn.delete(cli)
   assert(not old["tree-sitter"].available and old["tree-sitter"].detail:find("0.26.1", 1, true))
 
-  local languages = deps.languages()
+  local languages = health.languages()
   local has_verible = false
   for _, result in ipairs(languages) do
     if result.feature == "Formatter verible" then

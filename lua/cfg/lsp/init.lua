@@ -1,25 +1,23 @@
-require("cfg.lsp.lsp-config")
+local M = {}
 
-local missing = {}
-local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
--- executable() alone isn't enough here: this runs before mason extends PATH,
--- so also probe mason's bin dir directly
-local function installed(bin)
-  return vim.fn.executable(bin) == 1 or vim.uv.fs_stat(mason_bin .. "/" .. bin) ~= nil
+-- A fresh query for installers; reading the registry never starts a server.
+function M.missing()
+  local missing = {}
+  for name, config in pairs(require("cfg.lsp.servers")) do
+    local command = config.cmd and config.cmd[1]
+    if command and not require("cfg.dependencies").resolve(command, true) then missing[#missing + 1] = name end
+  end
+  table.sort(missing)
+  return missing
 end
 
-for name, config in pairs(require("cfg.lsp.servers")) do
-  vim.lsp.config(name, config)
-
-  -- Use existing project/system/Mason binaries immediately. Explicit Mason
-  -- installs enable missing servers when installation finishes.
-  local bin = config.cmd and config.cmd[1]
-  if bin and not installed(bin) then
-    table.insert(missing, name)
-  else
-    vim.lsp.enable(name)
+function M.setup()
+  require("cfg.lsp.ui").setup()
+  local missing = M.missing()
+  for name, config in pairs(require("cfg.lsp.servers")) do
+    vim.lsp.config(name, config)
+    if not vim.list_contains(missing, name) then vim.lsp.enable(name) end
   end
 end
 
-table.sort(missing)
-return missing
+return M

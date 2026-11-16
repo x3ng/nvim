@@ -36,6 +36,17 @@
 
 ## 验证
 
+结构重构前的维护和按键基线提交为 `85315ee`。重构将启动编排移回根 `init.lua`，插件声明集中到 `cfg/plugins/`，移除手工 import 清单；LSP、主题和健康检查显式初始化。formatter 选择表与安装来源独立于插件 spec，通用自动命令和缩进命令也不再混在 options 文件里。
+
+无插件启动环境下可检查导入边界和安装查询：
+
+```sh
+XDG_CACHE_HOME=/tmp/nvim-structure-check/cache XDG_STATE_HOME=/tmp/nvim-structure-check/state \
+  nvim --headless -u NONE -i NONE '+luafile tests/structure.lua'
+```
+
+该测试验证读取插件声明和运行时模块不会注册事件、创建命令、启用 LSP、探测可执行文件或启动进程；只有显式 setup 才启用服务。还检查新工具出现后安装器的查询会更新。共享/宿主设置模块和 bootstrap 的执行行为由根入口明确调用，不属于纯声明模块。
+
 已安装插件的环境下，从配置目录执行；状态和缓存隔离到 `/tmp`，不会改写个人主题选择：
 
 ```sh
