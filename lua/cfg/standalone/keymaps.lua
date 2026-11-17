@@ -8,7 +8,6 @@ vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Window down", silent = true })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Window up", silent = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Window right", silent = true })
 
-require("cfg.readline").setup()
 
 -- ── Basic editing ────────────────────────────────────────────────────────────
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save", silent = true })

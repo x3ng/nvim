@@ -18,7 +18,7 @@ local function check()
     end
     assert(vim.fn.exists(":SetIndent") == 0)
     assert(vim.fn.maparg("<C-a>", "i") == "")
-    assert(vim.fn.maparg("<C-a>", "c") == "<Home>")
+    assert(vim.fn.maparg("<C-a>", "c") == "")
     for name in pairs(config.plugins) do
       assert(name == "lazy.nvim" or name == "nvim-surround" or name == "vim-repeat", "Unexpected active plugin: " .. name)
     end
@@ -73,7 +73,7 @@ local function check()
     assert(not package.loaded["cfg.vscode"])
     assert(config.plugins["snacks.nvim"] and config.plugins["blink.cmp"])
     assert(vim.o.number and vim.o.relativenumber and vim.o.laststatus == 3)
-    assert(vim.fn.maparg("<C-a>", "i") == "<Home>")
+    assert(vim.fn.maparg("<C-a>", "i") == "")
     assert(vim.fn.maparg("<leader>w", "n") == "<Cmd>w<CR>" or vim.fn.maparg("<leader>w", "n") == "<cmd>w<cr>")
     vim.cmd("SetIndent tab 8")
     assert(vim.bo.shiftwidth == 8 and not vim.bo.expandtab and vim.b.manual_indent)

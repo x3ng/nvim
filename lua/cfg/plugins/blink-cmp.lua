@@ -1,8 +1,3 @@
-local function has_words_before()
-  local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
-end
-
 return {
   "Saghen/blink.cmp",
   dependencies = {
@@ -15,35 +10,8 @@ return {
   opts = {
     -- Keep completion usable without downloading or building a native matcher.
     fuzzy = { implementation = "lua" },
-    keymap = {
-      ["<Up>"] = { "select_prev", "fallback" },
-      ["<Down>"] = { "select_next", "fallback" },
-      ["<C-u>"] = false,
-      ["<C-d>"] = false,
-      ["<C-e>"] = false,
-      ["<C-b>"] = false,
-      ["<C-f>"] = false,
-      ["<C-n>"] = false,
-      ["<C-p>"] = false,
-      ["<C-k>"] = false,
-      ["<CR>"] = { "accept", "fallback" },
-      ["<Tab>"] = {
-        "snippet_forward",
-        "select_next",
-        function(cmp)
-          if has_words_before() or vim.api.nvim_get_mode().mode == "c" then return cmp.show() end
-        end,
-        "fallback",
-      },
-      ["<S-Tab>"] = {
-        "select_prev",
-        "snippet_backward",
-        function(cmp)
-          if vim.api.nvim_get_mode().mode == "c" then return cmp.show() end
-        end,
-        "fallback",
-      },
-    },
+    -- Built-in preset: Enter accepts a selected candidate; Ctrl-n/p select.
+    keymap = { preset = "enter" },
 
     completion = {
       list = { selection = { preselect = false } },
@@ -65,14 +33,7 @@ return {
       enabled = true,
     },
     cmdline = {
-      keymap = {
-        preset = "cmdline",
-        ["<C-a>"] = false, ["<C-e>"] = false,
-        ["<C-b>"] = false, ["<C-f>"] = false,
-        ["<C-d>"] = false, ["<C-k>"] = false,
-        ["<C-n>"] = false, ["<C-p>"] = false,
-        ["<C-u>"] = false,
-      },
+      keymap = { preset = "cmdline" },
       completion = {
         list = { selection = { preselect = false } },
         menu = {

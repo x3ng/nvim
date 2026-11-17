@@ -10,15 +10,11 @@ terminal still uses the full standalone configuration.
 2. Merge [settings.json](vscode/settings.json) into your editor's **User Settings
    (JSON)**. Paths match this NixOS machine; adjust them for another machine or
    a remote extension host. Keep `neovimClean` false so this configuration loads.
-3. Optionally append [keybindings.json](vscode/keybindings.json) to **Keyboard
-   Shortcuts (JSON)** for the existing Readline Insert-mode habits. These invoke
-   VSCode editing commands only in Neovim Insert mode. Word boundaries follow
-   VSCode; Ctrl-n/p move the cursor even with suggestions open.
-4. Reload the editor window. In its Neovim command line, `:lua print(vim.g.vscode)`
+3. Reload the editor window. In its Neovim command line, `:lua print(vim.g.vscode)`
    should print a truthy value. `:Lazy` should show only lazy, nvim-surround and
    vim-repeat as active plugins.
 
-These JSON files are mergeable examples, not automatically applied settings.
+The settings JSON is a mergeable example, not automatically applied settings.
 Existing VSCode/VSCodium user settings are not overwritten by this repository.
 
 ## Ownership
@@ -69,9 +65,10 @@ keys have no host mapping. Native extension mappings handle other Vim operations
 
 Normal-mode Ctrl keys above are forwarded by the extension's default settings.
 Custom VSCode shortcuts can intercept them: check Keyboard Shortcuts if a key does
-not reach Neovim. Lua Insert-mode mappings are deliberately omitted; use the JSON
-example for Insert editing. Command-line mappings remain defined in Lua, but the
-extension's command-line input supports only its documented subset of special keys.
+not reach Neovim. This configuration does not add Insert or command-line Readline
+mappings. If you previously copied the old `docs/vscode/keybindings.json` example,
+remove those Insert-mode cursor/deletion overrides from your User Keyboard Shortcuts
+to restore host defaults; repository changes do not edit your VSCode user settings.
 
 ## Verification
 

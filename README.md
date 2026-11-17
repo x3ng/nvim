@@ -21,8 +21,7 @@ lua/cfg/
 ├── lsp/                   setup(), UI behavior and server registry
 ├── format/                formatter registry, install sources and indentation
 ├── dependencies.lua       external tool declarations and availability queries
-├── health.lua             startup summary and :checkhealth cfg
-└── readline.lua           shared Insert/command-line editing
+└── health.lua             startup summary and :checkhealth cfg
 ```
 
 ## Ownership and initialization
@@ -36,6 +35,8 @@ lua/cfg/
 - VSCode/VSCodium setup, keybindings and verification: [docs/vscode.md](docs/vscode.md).
 
 ## Conventions
+
+- Insert and command-line editing use native Neovim/Blink bindings without a Readline emulation layer. Blink uses its `enter` preset: Ctrl-n/p or Up/Down select, Enter accepts a selected candidate, Ctrl-e cancels, and Tab/Shift-Tab navigate snippet placeholders. Snacks uses its default input/picker bindings.
 
 - Shared `cfg.core` loads first; `vim.g.vscode` selects the host settings. Both hosts read the same plugin directory; only standalone starts native services after plugins load.
 - VSCode uses a plugin whitelist through lazy `cond`, retaining disabled plugins for standalone use. Specs must not trigger standalone services while being evaluated; explicit plugin `cond` functions must also respect the host.
