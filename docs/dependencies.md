@@ -26,6 +26,16 @@ nix shell nixpkgs#ripgrep nixpkgs#fd nixpkgs#git nixpkgs#lazygit nixpkgs#imagema
 
 Mason 是语言工具的**显式安装后备**，不负责 ripgrep、fd、ImageMagick、lazygit 等 UI 工具。`:MasonToolsInstall` 安装缺失的已配置语言工具；`:TSInstallConfigured` 安装缺失 parser。普通启动不自动安装这些工具。更换项目环境后重新从该环境启动 Neovim，再执行 health。
 
+## 文件查找与符号链接循环
+
+文件查找保留 Snacks 默认的 `fd/fdfind → rg → find` 后端选择，不强制固定工具。选择依据是工具是否存在，不是某个后端运行出错后自动换另一个重试。
+
+Ubuntu/Debian 的 fd 包名是 `fd-find`，可执行文件叫 `fdfind`，Snacks 直接识别，无需创建 `fd` 别名或软链接。安装后重启 Neovim；Snacks 会缓存工具探测结果。Nix 不是 Ubuntu 上的必需依赖。
+
+在打包用的自引用目录中，`rg --files -L` 会检测并跳过循环，但返回错误码 2；即便其他文件已经列出，Snacks 仍会提示 `Command failed`。`--no-messages` 只隐藏错误文本，不会把退出状态改成成功。当前 fd 的实测行为是跳过循环并返回 0，因此建议有此类目录的环境提供 fd/fdfind；普通链接跟随与 ignored 文件策略不变，不为具体库添加排除规则。
+
+这属于后端行为差异；不能把所有 rg 错误码 2 都当作成功，否则也会隐藏权限和读取错误。现有配置没有增加 wrapper、修改插件源码或全局屏蔽错误。
+
 ## 功能与能力边界
 
 - 全文搜索、TODO 项目搜索、grug-far 默认替换引擎都需要 `rg`；文件 picker 按 `fd/fdfind → rg → find` 回退，缺 rg 不代表文件查找也坏了。
