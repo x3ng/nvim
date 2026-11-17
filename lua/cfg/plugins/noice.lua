@@ -13,6 +13,7 @@ return {
       view_history = "messages",
     },
     views = {
+      notify = { backend = "snacks" },
       cmdline = {
         position = { row = "100%", col = 0 },
         size = { width = "100%", height = 1 },
@@ -67,7 +68,14 @@ return {
         opts = { merge = true, title = "Messages" },
       },
     },
-    notify = { enabled = false },
+    -- Noice owns routing/history; use Snacks directly as the display backend,
+    -- rather than forwarding through vim.notify (which would recurse).
+    notify = { enabled = true },
+    commands = {
+      history = {
+        filter = { any = { { event = "notify" }, { event = "msg_show" }, { event = "lsp", kind = "message" } } },
+      },
+    },
     popupmenu = { enabled = false },
     lsp = {
       progress = { enabled = false },
@@ -77,7 +85,10 @@ return {
     },
   },
   keys = {
-    { "<leader>nm", "<cmd>Noice history<cr>", desc = "Editor Message History" },
-    { "<leader>nc", "<cmd>Noice dismiss<cr>", desc = "Dismiss Editor Messages" },
+    { "<leader>nh", "<cmd>Noice snacks<cr>", desc = "Message & Notification History" },
+    { "<leader>nd", function()
+      require("noice").cmd("dismiss")
+      Snacks.notifier.hide()
+    end, desc = "Dismiss Messages & Notifications" },
   },
 }

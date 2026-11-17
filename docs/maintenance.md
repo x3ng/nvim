@@ -27,7 +27,7 @@
 | --- | --- | --- |
 | 导航 / 文件操作 | Snacks 查找和浏览；Oil 编辑目录以批量改名/移动 | 保留，两者职责不同；Oil 不接管默认 explorer |
 | 搜索 / 替换 | Snacks grep 查找；grug-far 做项目替换 | 保留，共用 rg，不增加第二种搜索引擎 |
-| 编辑器消息 / 通知 | Noice 接管命令行和 `msg_show`；Snacks 接管 `vim.notify` | 保留；Noice 的 notify、LSP hover/signature/progress、补全菜单接管均关闭。两套历史入口仍有认知成本 |
+| 编辑器消息 / 通知 | Noice 接管命令行、`msg_show` 和 `vim.notify`，统一路由与历史；Snacks 渲染通知与历史 picker | `nh` 查看统一历史，`nd` 收起两边显示；移除 `nm` / `nc`。Noice 的 LSP hover/signature/progress、补全菜单接管继续关闭 |
 | 主题 | 主题完整负责配色；本地 theme 模块只负责选择和持久化 | 保留四套主题，移除透明覆盖及其开关 |
 | 语义 / Git 标记 | Snacks words 使用 LSP 引用；gitsigns 提供行级 Git 状态和 hunk 操作 | 保留；Snacks Git picker 负责列表导航，未替代 hunk 编辑 |
 | 语言工具 | 原生 LSP 负责运行，Conform 手动格式化，Mason 负责显式安装 | 保留现有注册表，不另建依赖管理层 |
@@ -61,3 +61,12 @@ XDG_CACHE_HOME=/tmp/nvim-theme-check/cache XDG_STATE_HOME=/tmp/nvim-theme-check/
 主题测试检查四套主题的不透明背景、移除透明入口、旧透明状态不再干预主题、实时预览不持久化、取消/确认、明暗 background 恢复、持久状态重载和失效主题回退。这些是运行时和 highlight 验证，仍需在实际终端里观察字体和视觉效果。依赖测试命令见统一依赖文档。
 
 排查依赖先用 `:checkhealth cfg`，需要深入时再用插件自己的 health / `:ConformInfo`。不要仅为消除所有可选提示而安装全部扩展工具。
+
+基础 UI 的职责、终端复用与消息路由策略见 [ui-review.md](ui-review.md)。运行时验证：
+
+```sh
+XDG_CACHE_HOME=/tmp/nvim-ui-check/cache XDG_STATE_HOME=/tmp/nvim-ui-check/state \
+  nvim --headless -i NONE '+luafile tests/ui.lua'
+```
+
+该检查实际创建本地 shell，验证布局切换、隐藏/重开、进程复用及退出清理；同时验证通知经 Noice 到达 Snacks、统一历史包含编辑器消息与通知且不重复、收起操作保留历史。

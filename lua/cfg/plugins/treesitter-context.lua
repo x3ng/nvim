@@ -11,6 +11,7 @@ return {
   },
   opts = {
     max_lines = 3, -- cap for deeply nested contexts
+    trim_scope = "inner", -- retain class/function headers before nested if/for
     multiline_threshold = 1,
     mode = "cursor", -- scope under the cursor, not the window top
   },

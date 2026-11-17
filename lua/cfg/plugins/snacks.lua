@@ -1,3 +1,23 @@
+-- Reuse Snacks' cwd/count identity across layouts; changing the presentation
+-- must not start another shell or toggle a window in the old position.
+local function terminal(position)
+  local layout = {
+    float = { position = "float", width = 0.9, height = 0.8 },
+    bottom = { position = "bottom", width = 0.9, height = 0.3 },
+    right = { position = "right", width = 0.4, height = 0.8 },
+  }
+  local win = layout[position]
+  local term, created = Snacks.terminal.get(nil, { win = win })
+  if created then return end
+  if term.opts.position == position then
+    term:toggle()
+  else
+    term:hide()
+    term.opts = vim.tbl_deep_extend("force", term.opts, win)
+    term:show():focus()
+  end
+end
+
 return {
   "folke/snacks.nvim",
   priority = 1000,
@@ -111,7 +131,7 @@ return {
       margin = { top = 0, right = 1, bottom = 0 },
       padding = true,
       sort = { "level", "added" },
-      level = vim.log.levels.TRACE,
+      level = vim.log.levels.INFO,
       icons = {
         error = " ",
         warn = " ",
@@ -126,6 +146,7 @@ return {
         position = "float",
         width = 0.9,
         height = 0.8,
+        wo = { winbar = "" },
       },
     },
     indent = {
@@ -201,9 +222,9 @@ return {
     { "<leader>s:", function() Snacks.picker.command_history() end, desc = "Command History" },
 
     -- Terminals
-    { "<C-/>", function() Snacks.terminal() end, desc = "Toggle Terminal", mode = { "n", "t" } },
-    { "<leader>th", function() Snacks.terminal({ win = { position = "bottom", height = 0.3 } }) end, desc = "Horizontal Terminal" },
-    { "<leader>tv", function() Snacks.terminal({ win = { position = "right", width = 0.4 } }) end, desc = "Vertical Terminal" },
+    { "<C-/>", function() terminal("float") end, desc = "Toggle Terminal", mode = { "n", "t" } },
+    { "<leader>th", function() terminal("bottom") end, desc = "Horizontal Terminal" },
+    { "<leader>tv", function() terminal("right") end, desc = "Vertical Terminal" },
 
     -- Lazygit
     { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
@@ -217,9 +238,7 @@ return {
     { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
     { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff" },
 
-    -- Notifications (editor messages are owned by cfg.noice)
-    { "<leader>nh", function() Snacks.notifier.show_history() end, desc = "Notification History" },
-    { "<leader>nd", function() Snacks.notifier.hide() end, desc = "Dismiss Notifications" },
+    -- Message routing/history and dismiss mappings belong to Noice.
 
     -- Words (LSP references highlight)
     { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference" },

@@ -19,13 +19,13 @@ local function check()
     "sg", "ss", "sS", "sd", "sD", "sc", "sh", "sk", "sm", "sj", "sl", "sq", "s/", "s:",
     "sr", "sw", "sb", "st", "cf", "cd", "cr", "cp", "hs", "hr", "hp", "hb", "hd",
     "gg", "gG", "gb", "gl", "gL", "gs", "gS", "gd", "uw", "ul", "uc", "uC", "uh", "us",
-    "nm", "nc", "nh", "nd", "th", "tv", "qq", "qs", "qS", "ql", "qd", "w",
+    "nh", "nd", "th", "tv", "qq", "qs", "qS", "ql", "qd", "w",
   }) do present(key) end
   present("sv", "x")
   present("cf", "x")
   for _, key in ipairs({
     "fb", "ce", "fg", "fs", "fS", "fd", "fD", "fc", "fh", "fk", "fm", "fj", "fl", "fq", "f/", "f:",
-    "df", "lr", "mp", ".", "S",
+    "df", "lr", "mp", ".", "S", "nm", "nc",
   }) do assert(not next(mapping(key)), "Old mapping still present: " .. key) end
 
   -- Verify callback dispatch without launching external processes or picker UI.

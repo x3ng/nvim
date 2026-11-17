@@ -16,8 +16,8 @@ Leader 是空格。按功能分组，插件名不进入分组；本轮只整理�
 | `g` Git | `gg` 项目 lazygit；`gG` 当前文件目录 lazygit；`gb` 分支；`gl` 提交日志；`gL` 当前行日志；`gs` 状态；`gS` stash；`gd` diff 列表 |
 | `h` Git Hunks | `hs` stage hunk；`hr` reset hunk；`hp` 预览 hunk；`hb` 当前行 blame；`hd` 当前文件 diff |
 | `u` UI | `uw` 折行；`ul` 相对行号；`uc` 光标行；`uC` 主题（实时预览）；`uh` inlay hints；`us` sticky context |
-| `n` Messages & Notifications | `nm` 编辑器消息历史；`nc` 隐藏编辑器消息；`nh` 通知历史；`nd` 隐藏通知。编辑器消息由 Noice 管理，通知由 Snacks 管理 |
-| `t` Terminal | `th` 底部终端；`tv` 右侧终端 |
+| `n` Messages & Notifications | `nh` 统一消息与通知历史（Snacks picker）；`nd` 同时收起消息与通知。Noice 负责路由和历史，Snacks 负责通知与历史列表显示；移除 `nm` / `nc` |
+| `t` Terminal | `th` 底部终端；`tv` 右侧终端；与 `<C-/>` 浮窗复用同目录、同编号的 shell，切换方向移动窗口，重复同入口隐藏并保留进程 |
 | `q` Quit & Sessions | `qq` 退出全部；`qs` 恢复当前目录会话；`qS` 选择会话；`ql` 上次会话；`qd` 停止本次进程的会话自动保存（不删除已有会话） |
 | 高频单键 | `w` 保存；`<leader>` Flash 跳转（即连按两次空格，Normal / Visual / Operator-pending） |
 
