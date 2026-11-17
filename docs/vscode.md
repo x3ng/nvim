@@ -39,7 +39,7 @@ standalone plugins from running without marking them for removal by `:Lazy clean
 Plugin specs only declare configuration; reading them does not initialize native LSP.
 Standalone services are started explicitly by the root entry point after lazy setup.
 Only nvim-surround and vim-repeat are shared editing plugins for now. Flash,
-Tree-sitter textobjects and fcitx switching are not enabled in VSCode.
+Tree-sitter textobjects are not enabled in VSCode.
 
 ## Keys
 

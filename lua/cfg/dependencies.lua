@@ -11,7 +11,6 @@ M.tools = {
   { id = "node", feature = "Markdown browser preview runtime", any = { { "node" } }, startup = true, nix = "nodejs" },
   { id = "curl", feature = "Downloads / remote images / parser installation", any = { { "curl" } }, startup = true, nix = "curl" },
   { id = "clipboard", feature = "System clipboard", any = { { "wl-copy", "wl-paste" }, { "xclip" }, { "xsel" } }, optional = true, nix = "wl-clipboard" },
-  { id = "input-method", feature = "Input method switching", any = { { "fcitx5-remote" } }, optional = true, nix = "fcitx5" },
   { id = "tree-sitter", feature = "Parser installation / update", any = { { "tree-sitter" } }, min_version = "0.26.1", nix = "tree-sitter" },
   { id = "compiler", feature = "Parser compilation", any = { { "cc" }, { "gcc" }, { "clang" } }, nix = "gcc" },
   { id = "tar", feature = "Parser installation", any = { { "tar" } }, nix = "gnutar" },

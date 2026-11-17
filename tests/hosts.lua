@@ -3,8 +3,11 @@ local function check()
   local vscode = not not vim.g.vscode
   assert(vim.g.mapleader == " " and vim.o.ignorecase and vim.o.smartcase)
   assert(vim.filetype.match({ filename = "module.vh" }) == "verilog")
+  assert(not package.loaded["cfg.input"], "Removed input-method service loaded")
+  assert(vim.fn.maparg(";;", "i") == "", "Removed IME mapping remains")
   local config = require("lazy.core.config")
   assert(#config.spec.notifs == 0, vim.inspect(config.spec.notifs))
+  assert(not config.plugins["rime.vim"] and not config.plugins["fcitx.nvim"], "Removed IME plugin remains")
   for _, key in ipairs({ "fb", "fg", "fc", "fs", "fS", "fd", "fk", "df", "lr", "mp", "ce" }) do
     assert(vim.fn.maparg("<leader>" .. key, "n") == "", "Old leader mapping remains: " .. key)
   end
@@ -19,7 +22,7 @@ local function check()
     for name in pairs(config.plugins) do
       assert(name == "lazy.nvim" or name == "nvim-surround" or name == "vim-repeat", "Unexpected active plugin: " .. name)
     end
-    for _, name in ipairs({ "snacks.nvim", "noice.nvim", "blink.cmp", "mason.nvim", "nvim-treesitter", "fcitx.nvim" }) do
+    for _, name in ipairs({ "snacks.nvim", "noice.nvim", "blink.cmp", "mason.nvim", "nvim-treesitter" }) do
       assert(config.spec.ignore_installed[name], "Plugin not protected from clean: " .. name)
     end
     local calls, settings = {}, { ["editor.lineNumbers"] = "on", ["editor.renderLineHighlight"] = "line", ["editor.inlayHints.enabled"] = "on" }

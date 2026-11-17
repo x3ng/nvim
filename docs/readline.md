@@ -33,8 +33,8 @@ Snacks `vim.ui.input` uses Ctrl-n/p for input history.
 Other plugins may need adaptation when they define buffer-local mappings.
 Terminal buffers use the shell's own Readline bindings.
 
-Chinese input uses the system input method; `fcitx.nvim` loads only when
-`fcitx5-remote` is available. This configuration does not install an internal IME.
+This configuration does not manage input methods. Keep the host input method
+in English for Vim keybindings.
 
 Inspired by [tpope/vim-rsi](https://github.com/tpope/vim-rsi), with Ctrl-n/p
 movement and Snacks integration adapted for this configuration.
