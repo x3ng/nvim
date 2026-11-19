@@ -8,6 +8,10 @@ vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Window down", silent = true })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Window up", silent = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Window right", silent = true })
 
+vim.keymap.set("n", "<M-h>", "<cmd>vertical resize -5<cr>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<M-l>", "<cmd>vertical resize +5<cr>", { desc = "Increase window width" })
+vim.keymap.set("n", "<M-j>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
+vim.keymap.set("n", "<M-k>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
 
 -- ── Basic editing ────────────────────────────────────────────────────────────
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save", silent = true })
