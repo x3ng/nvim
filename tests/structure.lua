@@ -55,7 +55,13 @@ local function check()
     lsp.setup()
     assert(#configured == 2 and vim.deep_equal(enabled, { "first" }))
     local specs = require("plugins.mason")
-    local installer, integration = specs[4], specs[3]
+    local function spec(name)
+      for _, candidate in ipairs(specs) do
+        if candidate[1] == name then return candidate end
+      end
+    end
+    local installer = assert(spec("WhoIsSethDaniel/mason-tool-installer.nvim"))
+    local integration = assert(spec("mason-org/mason-lspconfig.nvim"))
     assert(vim.list_contains(installer.opts().ensure_installed, "second"))
     assert(vim.deep_equal(integration.opts().automatic_enable, { "second" }))
     assert(queried["tree-sitter"] and not queried["tree-sitter-cli"], "Package name was used as executable")

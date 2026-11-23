@@ -15,7 +15,6 @@ local function check()
     assert(package.loaded["config.vscode"])
     for _, name in ipairs({
       "config.autocmds",
-      "config.start",
       "config.copy_location",
       "config.theme",
       "config.lsp",
@@ -78,7 +77,8 @@ local function check()
     assert(settings["editor.inlayHints.enabled"] == "on")
     assert(settings["editor.lineNumbers"] == "on" and settings["editor.renderLineHighlight"] == "line")
   else
-    assert(package.loaded["config"] and package.loaded["config.start"] and package.loaded["config.lsp"])
+    require("lazy").load({ plugins = { "nvim-lspconfig" } })
+    assert(package.loaded["config"] and package.loaded["config.lsp"])
     assert(not package.loaded["config.vscode"])
     assert(config.plugins["snacks.nvim"] and config.plugins["blink.cmp"])
     assert(vim.o.number and vim.o.relativenumber and vim.o.laststatus == 3)

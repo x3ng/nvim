@@ -15,7 +15,6 @@ lua/
 │   ├── keymaps.lua         # shared keys; native-only part guarded
 │   ├── autocmds.lua        # native-only autocmds
 │   ├── lazy.lua            # lazy.nvim bootstrap and setup
-│   ├── start.lua           # native services after lazy
 │   ├── vscode/             # VSCode branch: settings and command bridges
 │   ├── lsp/                # server registry, setup and UI
 │   ├── format/             # formatter registry, install sources and indentation
@@ -31,11 +30,11 @@ lua/
 ## Ownership and initialization
 
 - `config` is first-party configuration; `plugins` contains third-party plugin declarations. lazy imports only `plugins`.
-- `init.lua` loads `config`, then `config.lazy`, and calls `config.start()` only when `vim.g.vscode` is unset.
-- `config/init.lua` loads shared options/keymaps, then selects the VSCode branch or the native branch. The native branch registers copy-location, autocmds and `:SetIndent`.
-- `config/options.lua` and `config/keymaps.lua` are shared; their native-only sections are guarded by `if not vim.g.vscode`. `config/autocmds.lua` and `config/start.lua` are native-only.
+- `init.lua` loads `config`, then `config.lazy`, and restores the persisted theme only when `vim.g.vscode` is unset.
+- `config/init.lua` loads shared options/keymaps, then selects the VSCode branch or the native branch. The native branch registers copy-location, autocmds, `:SetIndent`, C/C++ indentation and theme setup.
+- `config/options.lua` and `config/keymaps.lua` are shared; their native-only sections are guarded by `if not vim.g.vscode`. `config/autocmds.lua` is native-only.
 - Plugin specs live only under `plugins/`. Reading a spec does not start services, probe tools or load `config.*`. Related specs can share a file (themes and Mason).
-- `config.start()` runs after `lazy.setup()` and starts LSP, C/C++ indentation and theme setup/loading. Requiring a service module only exposes its functions.
+- `plugins/lsp.lua` triggers `config.lsp.setup()` on the first buffer (`BufReadPre` / `BufNewFile`), so startup does not initialize LSP unnecessarily. Theme loading runs after `lazy.setup()` on the native branch. Requiring a service module only exposes its functions.
 - `config.lsp.servers` and `config.format.formatters` are configuration data shared by runtime, installation and tests. Mason's specs query missing tools when loaded; queries do not initialize LSP.
 - External tools are not pre-checked or installed. Missing commands surface when their feature runs; use `:checkhealth vim.lsp`, `:ConformInfo` and `:Mason` to inspect installed tooling.
 - Noice owns message/notification routing, history and the command input overlay; Snacks renders notifications and the history picker. Routine messages expire after 2.5 seconds; errors, shell output and messages of 4+ lines stay in an unfocused split. `<leader>nh` opens unified message/notification history, `<leader>nd` dismisses both displays without clearing history. Notifications display at INFO and above.

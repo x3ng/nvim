@@ -7,7 +7,7 @@ local function check()
     assert(next(mapping(key, mode)), "Missing leader mapping: " .. key)
   end
   -- These actions are conditional in regular editing; check their real hooks.
-  require("lazy").load({ plugins = { "gitsigns.nvim", "which-key.nvim" } })
+  require("lazy").load({ plugins = { "nvim-lspconfig", "gitsigns.nvim", "which-key.nvim" } })
   require("plugins.gitsigns").opts.on_attach(vim.api.nvim_get_current_buf())
   for _, group in ipairs({ "UserLspConfig", "UserMarkdownPreview" }) do
     local hooks = vim.api.nvim_get_autocmds({ group = group })

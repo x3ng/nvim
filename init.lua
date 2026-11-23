@@ -2,7 +2,7 @@
 require("config")
 require("config.lazy")
 
--- Native services need plugin paths and Mason's PATH.
+-- Theme plugins load lazily, so restore the persisted colorscheme afterwards.
 if not vim.g.vscode then
-  require("config.start").setup()
+  require("config.theme").load()
 end

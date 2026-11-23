@@ -14,8 +14,6 @@ local function missing_tools()
 end
 
 return {
-  -- Server defaults must be available even when installation UI is not loaded.
-  { "neovim/nvim-lspconfig", lazy = false },
   {
     "williamboman/mason.nvim",
     opts = {
