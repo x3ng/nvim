@@ -23,6 +23,38 @@ local function check()
   }) do present(key) end
   present("sv", "x")
   present("cf", "x")
+  for _, mode in ipairs({ "n", "x" }) do
+    for _, key in ipairs({ "gy", "gY" }) do
+      assert(vim.fn.maparg(key, mode) ~= "", "Missing copy mapping: " .. key)
+    end
+  end
+
+  -- Location yanks: absolute path, with and without code.
+  local copy_context = require("cfg.standalone.copy_context")
+  local original_buf = vim.api.nvim_get_current_buf()
+  local buf = vim.api.nvim_create_buf(true, false)
+  vim.api.nvim_buf_set_name(buf, vim.fn.getcwd() .. "/lua/copy context test.lua")
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "local a = 1", "local b = 2", "local c = 3" })
+  vim.api.nvim_win_set_buf(0, buf)
+  vim.api.nvim_win_set_cursor(0, { 2, 0 })
+  local location = vim.fn.getcwd() .. "/lua/copy context test.lua:"
+  copy_context.copy_location()
+  assert(vim.fn.getreg('"') == location .. "2", vim.fn.getreg('"'))
+  copy_context.copy_with_code()
+  assert(vim.fn.getreg('"') == "local b = 2\n" .. location .. "2", vim.fn.getreg('"'))
+  local function feed(keys)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), "xt", false)
+  end
+  vim.api.nvim_win_set_cursor(0, { 2, 0 })
+  feed("Vj")
+  feed("gy")
+  assert(vim.fn.getreg('"') == location .. "2-3", vim.fn.getreg('"'))
+  vim.api.nvim_win_set_cursor(0, { 2, 0 })
+  feed("Vj")
+  feed("gY")
+  assert(vim.fn.getreg('"') == "local b = 2\nlocal c = 3\n" .. location .. "2-3", vim.fn.getreg('"'))
+  vim.api.nvim_win_set_buf(0, original_buf)
+  vim.api.nvim_buf_delete(buf, { force = true })
   for _, key in ipairs({
     "fb", "ce", "fg", "fs", "fS", "fd", "fD", "fc", "fh", "fk", "fm", "fj", "fl", "fq", "f/", "f:",
     "df", "lr", "mp", ".", "S", "nm", "nc",

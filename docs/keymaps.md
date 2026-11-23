@@ -19,13 +19,13 @@ Leader 是空格。按功能分组，插件名不进入分组。按空格后 whi
 | `n` Messages & Notifications | `nh` 统一消息与通知历史（Snacks picker）；`nd` 同时收起消息与通知。Noice 负责路由和历史，Snacks 负责通知与历史列表显示；移除 `nm` / `nc` |
 | `t` Terminal | `th` 底部终端；`tv` 右侧终端；与 `<C-/>` 浮窗复用同目录、同编号的 shell，切换方向移动窗口，重复同入口隐藏并保留进程 |
 | `q` Quit & Sessions | `qq` 退出全部；`qs` 恢复当前目录会话；`qS` 选择会话；`ql` 上次会话；`qd` 停止本次进程的会话自动保存（不删除已有会话） |
-| 高频单键 | `w` 保存；`<leader>` Flash 跳转（即连按两次空格，Normal / Visual / Operator-pending） |
+| 高频单键 | `w` 保存；`gy` / `gY` 复制位置 / 位置加正文（Normal / Visual，按整行复制）；`<leader>` Flash 跳转（即连按两次空格，Normal / Visual / Operator-pending） |
 
 `cd`、`cr`、`uh` 在 LSP attach 后提供；`h` 组在 gitsigns attach 后提供；`cp` 只在 Markdown buffer 提供。`g` 负责 Git 列表/工具，`h` 负责当前文件的行级操作。`s` 汇总搜索/选择及项目替换，`f` 不再容纳所有 picker。
 
 原生 `gd` / `gD`、`gr*`、`K`、`gO`、`[d` / `]d`、`[b` / `]b`、窗口切换和 `<C-/>` 终端入口保持不变。没有把 Vim 原生操作再复制到 leader 下。
 
-独立 Neovim 的 Normal 模式中，`Ctrl-h/j/k/l` 切换窗口。`Alt-h/l` 将当前窗口收窄 / 加宽 5 列，`Alt-j/k` 将当前窗口增高 / 降低 2 行。
+独立 Neovim 中，复制的位置使用绝对路径，格式为 `路径:行` 或 `路径:起始行-结束行`，不依赖工作目录。只复制正文仍用原生 `y`。Normal 模式下，`Ctrl-h/j/k/l` 切换窗口。`Alt-h/l` 将当前窗口收窄 / 加宽 5 列，`Alt-j/k` 将当前窗口增高 / 降低 2 行。
 
 VSCode 使用相同分组和同义操作，但只映射宿主实际支持的入口，见 [vscode.md](vscode.md)。例如 `bb` 是编辑器列表、`sd` 是 Problems、`cp` 是宿主 Markdown 预览；不会在 VSCode 内启动 Snacks 或 Neovim LSP。
 
