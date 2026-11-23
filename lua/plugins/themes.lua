@@ -1,4 +1,4 @@
--- Theme specs share opaque defaults; selection/persistence lives in cfg.standalone.theme.
+-- Theme specs share opaque defaults; selection/persistence lives in config.theme.
 return {
   {
     -- each flavour is its own colorscheme: catppuccin-mocha/-macchiato/-frappe/-latte

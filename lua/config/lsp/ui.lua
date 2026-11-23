@@ -21,7 +21,7 @@ function M.setup()
     severity_sort = true,
     -- show the diagnostic in a float while jumping with ]d/[d
     jump = { float = true },
-    -- no `float.border`: 'winborder' is set globally in cfg/standalone/options.lua
+    -- no `float.border`: 'winborder' is set globally in config/options.lua
   })
 
   -- Inlay hints (Neovim 0.11+), on by default; <leader>uh toggles per buffer

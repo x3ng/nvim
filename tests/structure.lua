@@ -20,10 +20,13 @@ local function check()
   forbid(vim.fn, "exepath")
   forbid(vim.fn, "executable")
   local ok, err = pcall(function()
-    for name, kind in vim.fs.dir("lua/cfg/plugins") do
-      if kind == "file" and name:sub(-4) == ".lua" then require("cfg.plugins." .. name:sub(1, -5)) end
+    for name, kind in vim.fs.dir("lua/plugins") do
+      if kind == "file" and name:sub(-4) == ".lua" then require("plugins." .. name:sub(1, -5)) end
     end
-    for _, name in ipairs({ "cfg.lsp", "cfg.lsp.ui", "cfg.standalone.theme", "cfg.format.indent", "cfg.format.cpp-indent", "cfg.dependencies", "cfg.health" }) do
+    for _, name in ipairs({ "config.format.formatters", "config.lsp.servers", "config.dependencies", "config.health" }) do
+      assert(not package.loaded[name], "Importing specs loaded " .. name)
+    end
+    for _, name in ipairs({ "config.lsp", "config.lsp.ui", "config.theme", "config.format.indent", "config.format.cpp-indent", "config.dependencies", "config.health" }) do
       require(name)
     end
   end)
@@ -31,13 +34,12 @@ local function check()
   assert(ok, err)
   assert(vim.fn.exists(":SetIndent") == 0)
   assert(not package.loaded.conform, "Importing specs loaded a runtime plugin")
-
   -- Installation queries must reflect newly available tools, without enabling LSP.
-  package.loaded["cfg.lsp.servers"] = {
+  package.loaded["config.lsp.servers"] = {
     first = { cmd = { "test-server-first" } },
     second = { cmd = { "test-server-second" } },
   }
-  local deps, lsp = require("cfg.dependencies"), require("cfg.lsp")
+  local deps, lsp = require("config.dependencies"), require("config.lsp")
   local installed, configured, enabled, queried = { ["test-server-first"] = true }, {}, {}, {}
   local resolve, config, enable = deps.resolve, vim.lsp.config, vim.lsp.enable
   deps.resolve = function(command)
@@ -51,7 +53,7 @@ local function check()
     assert(#configured == 0 and #enabled == 0, "A query initialized LSP")
     lsp.setup()
     assert(#configured == 2 and vim.deep_equal(enabled, { "first" }))
-    local specs = require("cfg.plugins.mason")
+    local specs = require("plugins.mason")
     local installer, integration = specs[4], specs[3]
     assert(vim.list_contains(installer.opts().ensure_installed, "second"))
     assert(vim.deep_equal(integration.opts().automatic_enable, { "second" }))

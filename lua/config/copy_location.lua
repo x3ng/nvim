@@ -61,7 +61,7 @@ end
 
 local function visual_mapping(func)
   return string.format(
-    ":<C-U>lua require('cfg.standalone.copy_context').%s(true)<CR>",
+    ":<C-U>lua require('config.copy_location').%s(true)<CR>",
     func
   )
 end

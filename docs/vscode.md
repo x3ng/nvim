@@ -2,7 +2,7 @@
 
 Use the **VSCode Neovim** extension (`asvetliakov.vscode-neovim`), not VSCodeVim.
 Both VSCode and VSCodium use the same host branch. Running `nvim` in an integrated
-terminal still uses the full standalone configuration.
+terminal still uses the full Neovim configuration.
 
 ## Setup
 
@@ -19,21 +19,22 @@ Existing VSCode/VSCodium user settings are not overwritten by this repository.
 
 ## Ownership
 
-`cfg.core` contains leader, search preferences, basic editing keys and filetypes.
-`cfg.standalone` owns Neovim UI, file watching, undo files, indentation, theme,
-native LSP and formatting support. `cfg.vscode` owns command bridges.
+`config` contains leader, search preferences, basic editing keys and filetypes.
+`config` also owns native UI, file watching, undo files, indentation, theme,
+copy-location, Git review, LSP and formatting. `config.vscode` is the VSCode
+branch and owns command bridges.
 
 In VSCode, indentation/EditorConfig, diagnostics, language servers, completion,
 auto-pairs, commenting, highlighting, folding, Git UI, terminal and formatting
 come from VSCode and its extensions. Configure your language tooling there.
-`:SetIndent` and automatic clang-format indentation discovery are standalone-only.
+`:SetIndent` and automatic clang-format indentation discovery are Neovim-only.
 Saving does not invoke a formatter from this Neovim configuration; VSCode's own
 `editor.formatOnSave` setting remains authoritative.
 
 The full lazy inventory is read in both hosts. A `cond` whitelist prevents
-standalone plugins from running without marking them for removal by `:Lazy clean`.
+Neovim plugins from running without marking them for removal by `:Lazy clean`.
 Plugin specs only declare configuration; reading them does not initialize native LSP.
-Standalone services are started explicitly by the root entry point after lazy setup.
+Neovim services are started explicitly by `config.start()` after lazy setup.
 Only nvim-surround and vim-repeat are shared editing plugins for now. Flash,
 Tree-sitter textobjects are not enabled in VSCode.
 

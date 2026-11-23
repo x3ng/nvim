@@ -1,9 +1,9 @@
 local M = {}
 
 function M.unmanaged_formatters()
-  local tools = require("cfg.format.tools")
+  local tools = require("config.format.tools")
   local missing = {}
-  for _, names in pairs(require("cfg.format.formatters")) do
+  for _, names in pairs(require("config.format.formatters")) do
     for _, name in ipairs(names) do
       if not vim.list_contains(tools.packages, name) and not tools.external[name] then missing[name] = true end
     end
@@ -15,16 +15,16 @@ end
 
 -- Explicit health checks may load Conform; ordinary startup only probes tools.
 function M.languages()
-  local deps = require("cfg.dependencies")
+  local deps = require("config.dependencies")
   local results = {}
-  for name, config in pairs(require("cfg.lsp.servers")) do
+  for name, config in pairs(require("config.lsp.servers")) do
     local command = config.cmd[1]
     local path = deps.resolve(command, true)
     results[#results + 1] = { feature = "LSP " .. name, command = command, path = path }
   end
   local conform = require("conform")
   local names = {}
-  for _, formatters in pairs(require("cfg.format.formatters")) do
+  for _, formatters in pairs(require("config.format.formatters")) do
     for _, name in ipairs(formatters) do names[name] = true end
   end
   for name in pairs(names) do
@@ -39,7 +39,7 @@ function M.languages()
 end
 
 function M.notify_missing(results, terminal)
-  local deps = require("cfg.dependencies")
+  local deps = require("config.dependencies")
   local missing = {}
   for _, result in ipairs(results) do
     if result.tool.startup and not result.available then
@@ -50,7 +50,7 @@ function M.notify_missing(results, terminal)
   local unmanaged = M.unmanaged_formatters()
   if #unmanaged > 0 then missing[#missing + 1] = "Formatters without an installation source: " .. table.concat(unmanaged, ", ") end
   if #missing > 0 then
-    vim.notify("Missing dependencies:\n" .. table.concat(missing, "\n") .. "\nRun :checkhealth cfg for paths and setup instructions.",
+    vim.notify("Missing dependencies:\n" .. table.concat(missing, "\n") .. "\nRun :checkhealth config for paths and setup instructions.",
       vim.log.levels.WARN, { title = "Neovim dependencies", timeout = 10000 })
   end
 end
@@ -64,7 +64,7 @@ function M.setup()
       -- No subprocesses, installers or terminal queries in the headless path.
       if #vim.api.nvim_list_uis() == 0 then return end
       vim.schedule(function()
-        local results = require("cfg.dependencies").inspect()
+        local results = require("config.dependencies").inspect()
         if not Snacks.config.image.enabled then
           M.notify_missing(results)
           return
@@ -81,10 +81,10 @@ function M.check()
   local health = vim.health
   if vim.g.vscode then
     health.start("External dependencies")
-    health.info("VSCode owns UI and language services; standalone dependency checks do not apply.")
+    health.info("VSCode owns UI and language services; Neovim dependency checks do not apply.")
     return
   end
-  local deps = require("cfg.dependencies")
+  local deps = require("config.dependencies")
   health.start("Configured tools (PATH order; no automatic installation)")
   for _, result in ipairs(deps.inspect(nil, true)) do
     local tool = result.tool
@@ -102,7 +102,7 @@ function M.check()
   if not Snacks.config.image.enabled then
     health.info("Snacks image is disabled; terminal graphics are not required.")
   elseif #vim.api.nvim_list_uis() == 0 then
-    health.info("Headless: terminal graphics cannot be verified. Run :checkhealth cfg inside the terminal you use.")
+    health.info("Headless: terminal graphics cannot be verified. Run :checkhealth config inside the terminal you use.")
   else
     Snacks.image.terminal.detect()
     local env = Snacks.image.terminal.env()
@@ -116,7 +116,7 @@ function M.check()
   health.start("Configured language tools (current environment and buffer)")
   local unmanaged = M.unmanaged_formatters()
   if #unmanaged > 0 then
-    health.warn("Formatters without an installation source: " .. table.concat(unmanaged, ", ") .. "\nUpdate cfg.format.tools.")
+    health.warn("Formatters without an installation source: " .. table.concat(unmanaged, ", ") .. "\nUpdate config.format.tools.")
   end
   health.info("Missing tools for unused languages are optional. Use project/Nix tools first, :MasonToolsInstall as an explicit fallback.\nFormatter availability may vary by buffer/project; use :ConformInfo in the affected file. Language runtimes and project dependencies still need the project's environment.")
   for _, result in ipairs(M.languages()) do

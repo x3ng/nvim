@@ -1,9 +1,9 @@
 -- Query tools only when the installer is loaded, never while importing specs.
 local function missing_tools()
-  local tools = require("cfg.format.tools")
-  local missing = require("cfg.lsp").missing()
+  local tools = require("config.format.tools")
+  local missing = require("config.lsp").missing()
   for _, name in ipairs(tools.packages) do
-    if not require("cfg.dependencies").resolve(tools.commands[name] or name, true) then missing[#missing + 1] = name end
+    if not require("config.dependencies").resolve(tools.commands[name] or name, true) then missing[#missing + 1] = name end
   end
   return missing
 end
@@ -32,7 +32,7 @@ return {
       "neovim/nvim-lspconfig",
     },
     opts = function()
-      return { ensure_installed = {}, automatic_enable = require("cfg.lsp").missing() }
+      return { ensure_installed = {}, automatic_enable = require("config.lsp").missing() }
     end,
   },
   {

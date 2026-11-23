@@ -1,7 +1,7 @@
 -- Run after init.lua with isolated XDG_STATE_HOME/XDG_CACHE_HOME.
 local function check()
-  local deps = require("cfg.dependencies")
-  local health = require("cfg.health")
+  local deps = require("config.dependencies")
+  local health = require("config.health")
   local function by_id(results)
     local indexed = {}
     for _, result in ipairs(results) do indexed[result.tool.id] = result end
@@ -25,7 +25,7 @@ local function check()
   vim.notify = notify
   assert(ok, err)
   assert(#messages == 1 and messages[1]:find("Live grep", 1, true))
-  assert(messages[1]:find(":checkhealth cfg", 1, true))
+  assert(messages[1]:find(":checkhealth config", 1, true))
   assert(messages[1]:find("Kitty graphics", 1, true))
   assert(not messages[1]:find("PDF", 1, true), "Optional extensions should not nag at startup")
   assert(not messages[1]:find("File picker", 1, true), "Working fallback was reported as missing")

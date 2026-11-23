@@ -46,7 +46,7 @@ local function check()
   -- Noice intentionally avoids UI setup in headless mode; configure its real
   -- router/source explicitly, without attaching the external message UI.
   local config = require("noice.config")
-  config.setup(require("cfg.plugins.noice").opts)
+  config.setup(require("plugins.noice").opts)
   require("noice.commands").setup()
   local router = require("noice.message.router")
   router.setup()

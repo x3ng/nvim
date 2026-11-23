@@ -50,12 +50,12 @@ return {
           preview = function(ctx)
             local picker = ctx.picker
             picker.user_theme = picker.user_theme or { name = vim.g.colors_name or "default", background = vim.o.background }
-            require("cfg.standalone.theme").preview(ctx.item.text)
+            require("config.theme").preview(ctx.item.text)
             Snacks.picker.preview.file(ctx)
           end,
           on_close = function(picker)
             local original = picker.user_theme
-            if original then require("cfg.standalone.theme").preview(original.name, original.background) end
+            if original then require("config.theme").preview(original.name, original.background) end
           end,
           confirm = function(picker, item)
             picker:close()
@@ -102,7 +102,7 @@ return {
         { section = "keys", gap = 1, padding = 1 },
         { title = "Recent", section = "recent_files", limit = 6, padding = 1 },
         { title = "Projects", section = "projects", limit = 6, padding = 1 },
-        -- restored from persistence.nvim (see cfg/plugins/persistence.lua)
+        -- restored from persistence.nvim (see plugins/persistence.lua)
         { title = "Sessions", section = "session", padding = 1 },
         { section = "startup" },
       },
@@ -172,7 +172,7 @@ return {
     { "<leader>bs", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
     { "<leader>bS", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
     -- Theme picking needs a picker, so it lives here instead of in the
-    -- plugin-free base layer (see cfg/standalone/theme.lua)
+    -- plugin-free base layer (see config/theme.lua)
     { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Choose Colorscheme" },
 
     -- Files and projects
@@ -212,11 +212,11 @@ return {
     { "<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
     { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
     { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
-    { "<leader>gd", function() require("cfg.standalone.git_review").working_tree() end, desc = "Git Diff" },
+    { "<leader>gd", function() require("config.git_review").working_tree() end, desc = "Git Diff" },
 
-    { "<leader>gc", function() require("cfg.standalone.git_review").open("commit") end, desc = "Review Last Commit" },
-    { "<leader>gr", function() require("cfg.standalone.git_review").open("branch") end, desc = "Review Branch from Merge Base" },
-    { "<leader>gm", function() require("cfg.standalone.git_review").open("main") end, desc = "Review against Mainline Tip" },
+    { "<leader>gc", function() require("config.git_review").open("commit") end, desc = "Review Last Commit" },
+    { "<leader>gr", function() require("config.git_review").open("branch") end, desc = "Review Branch from Merge Base" },
+    { "<leader>gm", function() require("config.git_review").open("main") end, desc = "Review against Mainline Tip" },
 
     -- Message routing/history and dismiss mappings belong to Noice.
 

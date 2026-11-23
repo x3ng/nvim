@@ -8,7 +8,7 @@ local function check()
   end
   -- These actions are conditional in regular editing; check their real hooks.
   require("lazy").load({ plugins = { "gitsigns.nvim", "which-key.nvim" } })
-  require("cfg.plugins.gitsigns").opts.on_attach(vim.api.nvim_get_current_buf())
+  require("plugins.gitsigns").opts.on_attach(vim.api.nvim_get_current_buf())
   for _, group in ipairs({ "UserLspConfig", "UserMarkdownPreview" }) do
     local hooks = vim.api.nvim_get_autocmds({ group = group })
     assert(#hooks == 1)
@@ -30,7 +30,7 @@ local function check()
   end
 
   -- Location yanks: absolute path, with and without code.
-  local copy_context = require("cfg.standalone.copy_context")
+  local copy_context = require("config.copy_location")
   local original_buf = vim.api.nvim_get_current_buf()
   local buf = vim.api.nvim_create_buf(true, false)
   vim.api.nvim_buf_set_name(buf, vim.fn.getcwd() .. "/lua/copy context test.lua")

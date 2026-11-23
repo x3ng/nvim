@@ -1,18 +1,18 @@
 # 外部依赖的统一入口
 
-在**实际使用的终端和项目环境**里运行 `:checkhealth cfg`。它会列出受影响功能、命令的实际路径、缺失项、最低版本和 Nix 补齐方式。启动时会对日常功能缺失的依赖发出一条汇总提醒，不等按下功能键才发现；没有缺失时不通知。没有新增快捷键。
+在**实际使用的终端和项目环境**里运行 `:checkhealth config`。它会列出受影响功能、命令的实际路径、缺失项、最低版本和 Nix 补齐方式。启动时会对日常功能缺失的依赖发出一条汇总提醒，不等按下功能键才发现；没有缺失时不通知。没有新增快捷键。
 
 依赖分三层管理：
 
 | 范围 | 唯一声明位置 | 如何管理 |
 | --- | --- | --- |
-| UI、搜索、图片、安装工具及可选扩展 | [`lua/cfg/dependencies.lua`](../lua/cfg/dependencies.lua) 的 `tools` | 声明受影响功能、命令组合/回退、最低版本和 Nix 包名；启动检查和 health 共用 |
-| LSP | `lua/cfg/lsp/servers.lua` | health 读取现有注册表，检查 PATH 或 Mason 路径，不复制服务器名单 |
-| Formatter | `lua/cfg/format/formatters.lua` | Conform 与 health 共用这份选择表；health 让 Conform 解析真实命令，包含项目本地工具和配置错误；安装来源由 `format/tools.lua` / Mason 管理 |
+| UI、搜索、图片、安装工具及可选扩展 | [`lua/config/dependencies.lua`](../lua/config/dependencies.lua) 的 `tools` | 声明受影响功能、命令组合/回退、最低版本和 Nix 包名；启动检查和 health 共用 |
+| LSP | `lua/config/lsp/servers.lua` | health 读取现有注册表，检查 PATH 或 Mason 路径，不复制服务器名单 |
+| Formatter | `lua/config/format/formatters.lua` | Conform 与 health 共用这份选择表；health 让 Conform 解析真实命令，包含项目本地工具和配置错误；安装来源由 `format/tools.lua` / Mason 管理 |
 
 新增需要外部命令的功能时，必须同时更新相应声明。`startup = true` 表示缺失会影响已配置的日常功能，启动时提醒；安装阶段工具只在 health 中警告；`optional = true` 的图片扩展和渐进增强只显示说明，不要求全部安装。检查不会下载工具或悄悄关闭功能。
 
-声明与检测由 `cfg.dependencies` 提供；启动提醒、语言工具汇总和 Snacks 图片终端能力由 `cfg.health` 处理，通过根 `init.lua` 显式启动。安装器在加载时重新查询缺失项，不使用启动时缓存的缺失列表；PATH 工具优先，明确需要时再检查可执行的 Mason 路径。
+声明与检测由 `config.dependencies` 提供；启动提醒、语言工具汇总和 Snacks 图片终端能力由 `config.health` 处理，通过根 `init.lua` 显式启动。安装器在加载时重新查询缺失项，不使用启动时缓存的缺失列表；PATH 工具优先，明确需要时再检查可执行的 Mason 路径。
 
 ## 补齐环境
 
@@ -58,4 +58,4 @@ XDG_CACHE_HOME=/tmp/nvim-deps-check/cache XDG_STATE_HOME=/tmp/nvim-deps-check/st
   nvim --headless -i NONE '+luafile tests/dependencies.lua'
 ```
 
-检查缺 rg 时文件查找仍可回退、剪贴板组合依赖、单次启动汇总、可选项不打扰、CLI 版本不满足，以及 Conform 名称到真实命令的解析。`:checkhealth cfg` 每次重新检查当前环境；VSCode host 明确跳过独立 Neovim 的依赖检查。
+检查缺 rg 时文件查找仍可回退、剪贴板组合依赖、单次启动汇总、可选项不打扰、CLI 版本不满足，以及 Conform 名称到真实命令的解析。`:checkhealth config` 每次重新检查当前环境；VSCode host 明确跳过独立 Neovim 的依赖检查。

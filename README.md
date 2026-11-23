@@ -2,35 +2,45 @@
 
 ## Structure
 
-`init.lua` shows the startup order directly: shared settings → host settings →
-bootstrap and plugin loading → standalone services. It does not delegate to a
-second entry point.
+`init.lua` loads the shared configuration, then lazy.nvim, and starts native
+services on the Neovim branch only. VSCode is a branch inside `lua/config/`,
+not a parallel directory tree.
 
 ```text
 init.lua
-lua/cfg/
-├── bootstrap.lua          lazy.nvim bootstrap
-├── core/                  shared options, editing keys and filetypes
-├── standalone/            options, keymaps, autocmds and theme state
-├── vscode/                host settings and VSCode command bridges
-├── plugins/               lazy specs, automatically imported by directory
-│   ├── snacks.lua
-│   ├── conform.lua
-│   ├── mason.lua
-│   └── themes.lua         the four theme specs
-├── lsp/                   setup(), UI behavior and server registry
-├── format/                formatter registry, install sources and indentation
-├── dependencies.lua       external tool declarations and availability queries
-└── health.lua             startup summary and :checkhealth cfg
+lua/
+├── config/                 # first-party configuration
+│   ├── init.lua            # shared settings + runtime branch
+│   ├── options.lua         # shared options; native-only part guarded
+│   ├── keymaps.lua         # shared keys; native-only part guarded
+│   ├── autocmds.lua        # native-only autocmds
+│   ├── lazy.lua            # lazy.nvim bootstrap and setup
+│   ├── start.lua           # native services after lazy
+│   ├── vscode/             # VSCode branch: settings and command bridges
+│   ├── lsp/                # server registry, setup and UI
+│   ├── format/             # formatter registry, install sources and indentation
+│   ├── copy_location.lua   # gy / gY
+│   ├── git_review.lua      # Git review picker
+│   ├── theme.lua           # theme selection and persistence
+│   ├── dependencies.lua    # external tool declarations and queries
+│   └── health.lua          # startup summary and :checkhealth config
+└── plugins/                # lazy specs, automatically imported by directory
+    ├── snacks.lua
+    ├── conform.lua
+    ├── mason.lua
+    └── themes.lua          # the four theme specs
 ```
 
 ## Ownership and initialization
 
-- `core`, `standalone` and `vscode` apply settings/keymaps when required by the entry point. `standalone` also explicitly registers builtin autocmds and the `:SetIndent` command.
-- Plugin specs live only under `cfg/plugins/`. Reading a spec does not start services or probe tools; lazy invokes its `init`, `opts` and `config` callbacks at the appropriate stage. Related specs can share a file (themes and Mason).
-- `cfg.lsp.setup()`, `cfg.format.cpp-indent.setup()`, theme setup/loading and `cfg.health.setup()` are called explicitly after `lazy.setup()`. Requiring a service module only exposes its functions.
-- `cfg.lsp.servers` and `cfg.format.formatters` are configuration data shared by runtime, installation and health checks. Mason's specs query missing tools when loaded; queries do not initialize LSP.
-- `cfg.dependencies` holds external tool declarations and PATH/Mason resolution. `cfg.health` owns reporting, installation-source checks and Snacks terminal capability integration. Startup dependency checks do not load Conform; an explicit health query loads it to inspect formatter commands.
+- `config` is first-party configuration; `plugins` contains third-party plugin declarations. lazy imports only `plugins`.
+- `init.lua` loads `config`, then `config.lazy`, and calls `config.start()` only when `vim.g.vscode` is unset.
+- `config/init.lua` loads shared options/keymaps, then selects the VSCode branch or the native branch. The native branch registers copy-location, autocmds and `:SetIndent`.
+- `config/options.lua` and `config/keymaps.lua` are shared; their native-only sections are guarded by `if not vim.g.vscode`. `config/autocmds.lua` and `config/start.lua` are native-only.
+- Plugin specs live only under `plugins/`. Reading a spec does not start services, probe tools or load `config.*`. Related specs can share a file (themes and Mason).
+- `config.start()` runs after `lazy.setup()` and starts LSP, C/C++ indentation, theme setup/loading and health checks. Requiring a service module only exposes its functions.
+- `config.lsp.servers` and `config.format.formatters` are configuration data shared by runtime, installation and health checks. Mason's specs query missing tools when loaded; queries do not initialize LSP.
+- `config.dependencies` holds external tool declarations and PATH/Mason resolution. `config.health` owns reporting, installation-source checks and Snacks terminal capability integration. Startup dependency checks do not load Conform; an explicit health query loads it to inspect formatter commands.
 - Noice owns message/notification routing, history and the command input overlay; Snacks renders notifications and the history picker. Routine messages expire after 2.5 seconds; errors, shell output and messages of 4+ lines stay in an unfocused split. `<leader>nh` opens unified message/notification history, `<leader>nd` dismisses both displays without clearing history. Notifications display at INFO and above.
 - VSCode/VSCodium setup, keybindings and verification: [docs/vscode.md](docs/vscode.md).
 
@@ -38,18 +48,18 @@ lua/cfg/
 
 - Insert and command-line editing use native Neovim/Blink bindings without a Readline emulation layer. Blink uses its `enter` preset: Ctrl-n/p or Up/Down select, Enter accepts a selected candidate, Ctrl-e cancels, and Tab/Shift-Tab navigate snippet placeholders. Snacks uses its default input/picker bindings.
 
-- Shared `cfg.core` loads first; `vim.g.vscode` selects the host settings. Both hosts read the same plugin directory; only standalone starts native services after plugins load.
-- VSCode uses a plugin whitelist through lazy `cond`, retaining disabled plugins for standalone use. Specs must not trigger standalone services while being evaluated; explicit plugin `cond` functions must also respect the host.
-- Everything under `cfg.` namespace — prevents require() shadowing plugins
-- Add/remove a plugin spec under `lua/cfg/plugins/`; there is no second manual import inventory. Keep runtime helpers outside this directory.
-- LSP servers are declared once in `lua/cfg/lsp/servers.lua`; project, system and Mason binaries are all supported
+- `vim.g.vscode` selects the VSCode branch; everything else is the default Neovim configuration.
+- VSCode uses a plugin whitelist through lazy `cond`, retaining disabled plugins for Neovim use. Specs must not trigger native modules while being evaluated.
+- First-party code lives under `lua/config/`; specs live under `lua/plugins/` and are never required by first-party runtime code.
+- Add/remove a plugin spec under `lua/plugins/`; there is no second manual import inventory. Keep runtime helpers outside this directory.
+- LSP servers are declared once in `lua/config/lsp/servers.lua`; project, system and Mason binaries are all supported
 - Native `vim.lsp.config()` / `vim.lsp.enable()` owns runtime LSP setup
-- Formatter tools are declared once in `lua/cfg/format/tools.lua`
+- Formatter tools are declared once in `lua/config/format/tools.lua`
 - Mason appends its bin directory to `PATH`. `:MasonToolsInstall` explicitly installs tools found missing when the installer loads; normal startup does not install tools or load the Mason LSP registry integration
 - Tools already in `PATH` take precedence over Mason-installed tools
 - Missing LSP servers are enabled when the explicit installer finishes. After adding tools through Nix or changing a project environment, restart Neovim from that environment
-- Formatter selection lives in `lua/cfg/format/formatters.lua`, installation sources in `format/tools.lua`, and plugin behavior in `plugins/conform.lua`.
-- Themes: choose with `<leader>uC` (Snacks picker, live preview); preview never saves, cancellation restores the original theme/background, confirmation persists. `:colorscheme` also persists to the state dir. `default` in `cfg/standalone/theme.lua` is the factory fallback. Themes own all colors and backgrounds; there is no transparency toggle or highlight override.
+- Formatter selection lives in `lua/config/format/formatters.lua`, installation sources in `format/tools.lua`, and plugin behavior in `plugins/conform.lua`.
+- Themes: choose with `<leader>uC` (Snacks picker, live preview); preview never saves, cancellation restores the original theme/background, confirmation persists. `:colorscheme` also persists to the state dir. `default` in `config/theme.lua` is the factory fallback. Themes own all colors and backgrounds; there is no transparency toggle or highlight override.
 - LSP keymaps: 0.12 built-ins stay authoritative (`gr*` family, `K`, `<C-s>`, `gO`); this config only adds `gd`/`gD`, `<leader>cd` (diagnostics float), `<leader>uh` (inlay hints), `<leader>cr` (`:lsp restart`)
 - Leader layout and migration table: [docs/keymaps.md](docs/keymaps.md). `f` files/projects, `s` search/pick, `b` buffers/scratch, `c` code, `g` Git, `h` Git hunks, `u` UI, `n` messages/notifications, `t` terminals, `q` quit/sessions.
 - Navigation: Snacks floating pickers — `ff` files, `fe` directory tree, `bb` buffers, `ss` document symbols, `sS` workspace symbols, `sd` diagnostics, `sD` buffer diagnostics (all with `<leader>`); file/symbol selection closes the picker
@@ -60,11 +70,11 @@ lua/cfg/
 - `<leader>s` groups search and selection (`sg` grep, `sr` grug-far, `sw`/`sb`/`sv` replacement prefill, `st` TODOs, plus symbols/diagnostics/help); `<leader>q` groups quit/sessions (`qq` quit, `qs` load, `qS` select, `ql` last, `qd` stop saving sessions)
 - Markdown: Neovim stays in highlighted source view; `<leader>cp` starts/stops the browser preview at `localhost:8080`
 - Filetypes: `.cu` uses the `cuda` parser; `.v`/`.vh` reuse `systemverilog` via `vim.treesitter.language.register`
-- `lua/cfg/plugins/treesitter.lua`'s `ensure_installed` is the single source of truth for parsers — install missing ones explicitly with `:TSInstallConfigured`; reopen affected buffers after installation
+- `lua/plugins/treesitter.lua`'s `ensure_installed` is the single source of truth for parsers — install missing ones explicitly with `:TSInstallConfigured`; reopen affected buffers after installation
 
 ## Tool setup and checks
 
-- Start with `:checkhealth cfg` in your actual terminal/project environment. See [docs/dependencies.md](docs/dependencies.md) for the dependency policy and setup; normal UI startup summarizes missing everyday tools once. Requires Neovim 0.12+ with the locked Tree-sitter version.
+- Start with `:checkhealth config` in your actual terminal/project environment. See [docs/dependencies.md](docs/dependencies.md) for the dependency policy and setup; normal UI startup summarizes missing everyday tools once. Requires Neovim 0.12+ with the locked Tree-sitter version.
 - Ownership boundaries and maintenance checks: [docs/maintenance.md](docs/maintenance.md). Snacks and alternatives: [docs/snacks-review.md](docs/snacks-review.md).
 - Search requires `rg` (ripgrep) on Neovim's `PATH`; file finding uses `fd`/`fdfind`, then `rg`, then `find`. Mason does not install these UI tools. For a temporary environment: `nix shell nixpkgs#ripgrep nixpkgs#fd -c nvim`.
 - Blink uses its Lua matcher; completion does not download or compile a native matcher.

@@ -1,7 +1,7 @@
 -- Theme selection and persistence. Colors are owned entirely by the theme.
 --
 --   <leader>uC      choose a colorscheme — needs a picker, so it
---                   is declared in cfg/plugins/snacks.lua instead of here
+--                   is declared in plugins/snacks.lua instead of here
 --   `default` below factory fallback used when nothing has been persisted yet
 --
 -- This layer stays dependency-free.

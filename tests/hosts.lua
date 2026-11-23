@@ -3,7 +3,7 @@ local function check()
   local vscode = not not vim.g.vscode
   assert(vim.g.mapleader == " " and vim.o.ignorecase and vim.o.smartcase)
   assert(vim.filetype.match({ filename = "module.vh" }) == "verilog")
-  assert(not package.loaded["cfg.input"], "Removed input-method service loaded")
+  assert(not package.loaded["config.input"], "Removed input-method service loaded")
   assert(vim.fn.maparg(";;", "i") == "", "Removed IME mapping remains")
   local config = require("lazy.core.config")
   assert(#config.spec.notifs == 0, vim.inspect(config.spec.notifs))
@@ -12,9 +12,21 @@ local function check()
     assert(vim.fn.maparg("<leader>" .. key, "n") == "", "Old leader mapping remains: " .. key)
   end
   if vscode then
-    assert(package.loaded["cfg.vscode"])
-    for _, name in ipairs({ "cfg.standalone", "cfg.lsp", "cfg.lsp.ui", "cfg.format.cpp-indent", "cfg.standalone.theme", "cfg.dependencies", "cfg.health" }) do
-      assert(not package.loaded[name], "Standalone module leaked: " .. name)
+    assert(package.loaded["config.vscode"])
+    for _, name in ipairs({
+      "config.autocmds",
+      "config.start",
+      "config.copy_location",
+      "config.git_review",
+      "config.theme",
+      "config.lsp",
+      "config.lsp.ui",
+      "config.format.indent",
+      "config.format.cpp-indent",
+      "config.dependencies",
+      "config.health",
+    }) do
+      assert(not package.loaded[name], "Neovim module leaked: " .. name)
     end
     assert(vim.fn.exists(":SetIndent") == 0)
     assert(vim.fn.maparg("<C-a>", "i") == "")
@@ -69,8 +81,8 @@ local function check()
     assert(settings["editor.inlayHints.enabled"] == "on")
     assert(settings["editor.lineNumbers"] == "on" and settings["editor.renderLineHighlight"] == "line")
   else
-    assert(package.loaded["cfg.standalone"] and package.loaded["cfg.lsp"])
-    assert(not package.loaded["cfg.vscode"])
+    assert(package.loaded["config"] and package.loaded["config.start"] and package.loaded["config.lsp"])
+    assert(not package.loaded["config.vscode"])
     assert(config.plugins["snacks.nvim"] and config.plugins["blink.cmp"])
     assert(vim.o.number and vim.o.relativenumber and vim.o.laststatus == 3)
     assert(vim.fn.maparg("<C-a>", "i") == "")
@@ -83,7 +95,7 @@ local function check()
   vim.api.nvim_win_set_cursor(0, { 1, 0 })
   vim.cmd("normal ysiw)")
   assert(vim.api.nvim_get_current_line() == "(word)", "Surround editing failed")
-  print((vscode and "VSCode" or "Standalone") .. " host checks passed")
+  print((vscode and "VSCode" or "Neovim") .. " host checks passed")
 end
 local ok, err = xpcall(check, debug.traceback)
 if not ok then

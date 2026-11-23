@@ -37,10 +37,10 @@ local function check()
   assert(vim.g.colors_name == "gruvbox", "A delayed preview overrode confirmation")
   -- Reload persisted state through the same startup entry point.
   vim.g.colors_name = nil
-  require("cfg.standalone.theme").load()
+  require("config.theme").load()
   assert(vim.g.colors_name == "gruvbox" and hl("Normal").bg)
   vim.fn.writefile({ "uninstalled-theme" }, state .. "/user-theme")
-  require("cfg.standalone.theme").load()
+  require("config.theme").load()
   assert(vim.g.colors_name == "vscode" and saved("user-theme") == "vscode")
   print("Theme checks passed")
 end
