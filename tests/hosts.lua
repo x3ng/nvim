@@ -17,14 +17,11 @@ local function check()
       "config.autocmds",
       "config.start",
       "config.copy_location",
-      "config.git_review",
       "config.theme",
       "config.lsp",
       "config.lsp.ui",
       "config.format.indent",
       "config.format.cpp-indent",
-      "config.dependencies",
-      "config.health",
     }) do
       assert(not package.loaded[name], "Neovim module leaked: " .. name)
     end

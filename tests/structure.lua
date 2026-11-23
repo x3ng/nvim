@@ -23,10 +23,10 @@ local function check()
     for name, kind in vim.fs.dir("lua/plugins") do
       if kind == "file" and name:sub(-4) == ".lua" then require("plugins." .. name:sub(1, -5)) end
     end
-    for _, name in ipairs({ "config.format.formatters", "config.lsp.servers", "config.dependencies", "config.health" }) do
+    for _, name in ipairs({ "config.format.formatters", "config.lsp.servers" }) do
       assert(not package.loaded[name], "Importing specs loaded " .. name)
     end
-    for _, name in ipairs({ "config.lsp", "config.lsp.ui", "config.theme", "config.format.indent", "config.format.cpp-indent", "config.dependencies", "config.health" }) do
+    for _, name in ipairs({ "config.lsp", "config.lsp.ui", "config.theme", "config.format.indent", "config.format.cpp-indent" }) do
       require(name)
     end
   end)
@@ -39,12 +39,13 @@ local function check()
     first = { cmd = { "test-server-first" } },
     second = { cmd = { "test-server-second" } },
   }
-  local deps, lsp = require("config.dependencies"), require("config.lsp")
+  local lsp = require("config.lsp")
   local installed, configured, enabled, queried = { ["test-server-first"] = true }, {}, {}, {}
-  local resolve, config, enable = deps.resolve, vim.lsp.config, vim.lsp.enable
-  deps.resolve = function(command)
+  local executable, config, enable = vim.fn.executable, vim.lsp.config, vim.lsp.enable
+  vim.fn.executable = function(command)
     queried[command] = true
-    return installed[command] and ("/tools/" .. command) or nil
+    local name = command:match("([^/]+)$")
+    return installed[name] and 1 or 0
   end
   vim.lsp.config = function(name) configured[#configured + 1] = name end
   vim.lsp.enable = function(name) enabled[#enabled + 1] = name end
@@ -64,7 +65,7 @@ local function check()
     assert(#integration.opts().automatic_enable == 0)
     assert(#configured == 2 and #enabled == 1, "Installer options initialized LSP")
   end)
-  deps.resolve, vim.lsp.config, vim.lsp.enable = resolve, config, enable
+  vim.fn.executable, vim.lsp.config, vim.lsp.enable = executable, config, enable
   assert(ok, err)
   print("Structure and initialization checks passed")
 end

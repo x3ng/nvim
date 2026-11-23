@@ -18,7 +18,7 @@ local function check()
     "ff", "fe", "fE", "fn", "fr", "fp", "bb", "bd", "bs", "bS",
     "sg", "ss", "sS", "sd", "sD", "sc", "sh", "sk", "sm", "sj", "sl", "sq", "s/", "s:",
     "sr", "sw", "sb", "st", "cf", "cd", "cr", "cp", "hs", "hr", "hp", "hb", "hd",
-    "gg", "gG", "gb", "gl", "gL", "gs", "gS", "gd", "gc", "gr", "gm", "gD", "gH", "?", "uw", "ul", "uc", "uC", "uh", "us",
+    "gg", "gG", "gd", "gD", "gH", "?", "uw", "ul", "uc", "uC", "uh", "us",
     "nh", "nd", "th", "tv", "qq", "qs", "qS", "ql", "qd", "w",
   }) do present(key) end
   present("sv", "x")

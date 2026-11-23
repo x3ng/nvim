@@ -12,10 +12,4 @@ return {
     "tree-sitter-cli",
   },
   commands = { ["tree-sitter-cli"] = "tree-sitter" },
-  external = {
-    gofmt = "ships with the Go toolchain",
-    nixfmt = "provided by the Nix configuration",
-    rustfmt = "provided by the Rust toolchain",
-    verible = "installed via the LSP package verible (verible-verilog-format executable)",
-  },
 }

@@ -20,10 +20,7 @@ lua/
 │   ├── lsp/                # server registry, setup and UI
 │   ├── format/             # formatter registry, install sources and indentation
 │   ├── copy_location.lua   # gy / gY
-│   ├── git_review.lua      # Git review picker
-│   ├── theme.lua           # theme selection and persistence
-│   ├── dependencies.lua    # external tool declarations and queries
-│   └── health.lua          # startup summary and :checkhealth config
+│   └── theme.lua           # theme selection and persistence
 └── plugins/                # lazy specs, automatically imported by directory
     ├── snacks.lua
     ├── conform.lua
@@ -38,9 +35,9 @@ lua/
 - `config/init.lua` loads shared options/keymaps, then selects the VSCode branch or the native branch. The native branch registers copy-location, autocmds and `:SetIndent`.
 - `config/options.lua` and `config/keymaps.lua` are shared; their native-only sections are guarded by `if not vim.g.vscode`. `config/autocmds.lua` and `config/start.lua` are native-only.
 - Plugin specs live only under `plugins/`. Reading a spec does not start services, probe tools or load `config.*`. Related specs can share a file (themes and Mason).
-- `config.start()` runs after `lazy.setup()` and starts LSP, C/C++ indentation, theme setup/loading and health checks. Requiring a service module only exposes its functions.
-- `config.lsp.servers` and `config.format.formatters` are configuration data shared by runtime, installation and health checks. Mason's specs query missing tools when loaded; queries do not initialize LSP.
-- `config.dependencies` holds external tool declarations and PATH/Mason resolution. `config.health` owns reporting, installation-source checks and Snacks terminal capability integration. Startup dependency checks do not load Conform; an explicit health query loads it to inspect formatter commands.
+- `config.start()` runs after `lazy.setup()` and starts LSP, C/C++ indentation and theme setup/loading. Requiring a service module only exposes its functions.
+- `config.lsp.servers` and `config.format.formatters` are configuration data shared by runtime, installation and tests. Mason's specs query missing tools when loaded; queries do not initialize LSP.
+- External tools are not pre-checked or installed. Missing commands surface when their feature runs; use `:checkhealth vim.lsp`, `:ConformInfo` and `:Mason` to inspect installed tooling.
 - Noice owns message/notification routing, history and the command input overlay; Snacks renders notifications and the history picker. Routine messages expire after 2.5 seconds; errors, shell output and messages of 4+ lines stay in an unfocused split. `<leader>nh` opens unified message/notification history, `<leader>nd` dismisses both displays without clearing history. Notifications display at INFO and above.
 - VSCode/VSCodium setup, keybindings and verification: [docs/vscode.md](docs/vscode.md).
 
@@ -74,7 +71,7 @@ lua/
 
 ## Tool setup and checks
 
-- Start with `:checkhealth config` in your actual terminal/project environment. See [docs/dependencies.md](docs/dependencies.md) for the dependency policy and setup; normal UI startup summarizes missing everyday tools once. Requires Neovim 0.12+ with the locked Tree-sitter version.
+- Requires Neovim 0.12+ with the locked Tree-sitter version. External tools are not pre-checked or installed; missing commands surface when the feature runs. Use `:checkhealth vim.lsp`, `:ConformInfo` and `:Mason` when a tool is missing.
 - Ownership boundaries and maintenance checks: [docs/maintenance.md](docs/maintenance.md). Snacks and alternatives: [docs/snacks-review.md](docs/snacks-review.md).
 - Search requires `rg` (ripgrep) on Neovim's `PATH`; file finding uses `fd`/`fdfind`, then `rg`, then `find`. Mason does not install these UI tools. For a temporary environment: `nix shell nixpkgs#ripgrep nixpkgs#fd -c nvim`.
 - Blink uses its Lua matcher; completion does not download or compile a native matcher.

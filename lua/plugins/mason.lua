@@ -1,9 +1,14 @@
 -- Query tools only when the installer is loaded, never while importing specs.
+local function available(command)
+  return vim.fn.executable(command) == 1
+    or vim.fn.executable(vim.fn.stdpath("data") .. "/mason/bin/" .. command) == 1
+end
+
 local function missing_tools()
   local tools = require("config.format.tools")
   local missing = require("config.lsp").missing()
   for _, name in ipairs(tools.packages) do
-    if not require("config.dependencies").resolve(tools.commands[name] or name, true) then missing[#missing + 1] = name end
+    if not available(tools.commands[name] or name) then missing[#missing + 1] = name end
   end
   return missing
 end

@@ -7,7 +7,6 @@ function M.setup()
   local theme = require("config.theme")
   theme.setup()
   theme.load()
-  require("config.health").setup()
 end
 
 return M

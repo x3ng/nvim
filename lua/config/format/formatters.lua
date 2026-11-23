@@ -1,4 +1,4 @@
--- Conform formatter names by filetype; read by the plugin and health checks.
+-- Conform formatter names by filetype; read by the plugin.
 return {
   lua = { "stylua" },
   javascript = { "prettierd", "prettier", stop_after_first = true },

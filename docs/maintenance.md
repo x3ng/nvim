@@ -10,7 +10,7 @@
 | 每个 `ColorScheme` 事件都保存主题，实时预览也触发事件；取消时再异步恢复 | 保留实时预览，但不保存预览；关闭时同步恢复原主题和 background，确认后单独应用并保存 |
 | 透明覆盖与主题配色职责冲突 | 按用户要求移除整个透明功能，包括 `<leader>ut`、状态读写及所有背景覆盖；主题完整管理配色 |
 | 首次写入主题状态时，状态目录未必存在 | 写入前创建状态目录 |
-| 外部依赖只有用到功能才暴露问题 | 集中声明，启动汇总缺失的日常工具，`:checkhealth config` 提供完整路径、版本、能力与补齐方式；保留图片渲染 |
+| 外部依赖只有用到功能才暴露问题 | 由使用时的插件/命令报错；不再维护依赖表或启动预检；保留图片渲染 |
 | zoxide、profiler 调试入口扩张日常配置范围 | 删除 `<leader>fz`、`<leader>ps`；无需为配置安装 zoxide |
 | Blink 默认尝试下载 Rust 匹配器 | 使用内置 Lua 匹配器，不自动下载或要求 Rust 构建；匹配性能和容错策略与 Rust 实现不同 |
 | Conform 的 Verilog formatter 配置使用了可执行文件名，无法解析 formatter | 配置名改为 `verible`，由 Conform 解析到 `verible-verilog-format`；同步修正 Mason 来源说明 |
@@ -19,7 +19,7 @@
 
 ## 外部依赖入口
 
-统一使用 [`docs/dependencies.md`](dependencies.md) 和 `:checkhealth config`。工具声明在 `config.dependencies`，语言工具从现有注册表读取；此处不再维护第二份依赖表。Snacks 的定位和候选比较见 [`docs/snacks-review.md`](snacks-review.md)。
+不再维护统一的依赖表或启动预检。工具缺失由使用时的插件/命令报错；排查用 `:checkhealth vim.lsp` 和 `:ConformInfo`。Snacks 的定位和候选比较见 [`docs/snacks-review.md`](snacks-review.md)。
 
 ## 职责审查与暂时保留
 
@@ -58,9 +58,9 @@ XDG_CACHE_HOME=/tmp/nvim-theme-check/cache XDG_STATE_HOME=/tmp/nvim-theme-check/
   nvim --headless -i NONE '+luafile tests/theme.lua'
 ```
 
-主题测试检查四套主题的不透明背景、移除透明入口、旧透明状态不再干预主题、实时预览不持久化、取消/确认、明暗 background 恢复、持久状态重载和失效主题回退。这些是运行时和 highlight 验证，仍需在实际终端里观察字体和视觉效果。依赖测试命令见统一依赖文档。
+主题测试检查四套主题的不透明背景、移除透明入口、旧透明状态不再干预主题、实时预览不持久化、取消/确认、明暗 background 恢复、持久状态重载和失效主题回退。这些是运行时和 highlight 验证，仍需在实际终端里观察字体和视觉效果。
 
-排查依赖先用 `:checkhealth config`，需要深入时再用插件自己的 health / `:ConformInfo`。不要仅为消除所有可选提示而安装全部扩展工具。
+排查依赖先用插件自身报错、`:checkhealth vim.lsp` 和 `:ConformInfo`。不要仅为消除所有可选提示而安装全部扩展工具。
 
 基础 UI 的职责、终端复用与消息路由策略见 [ui-review.md](ui-review.md)。运行时验证：
 

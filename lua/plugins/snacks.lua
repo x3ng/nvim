@@ -206,18 +206,6 @@ return {
     { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
     { "<leader>gG", function() Snacks.lazygit({ cwd = vim.fn.expand("%:p:h") }) end, desc = "Lazygit (file dir)" },
 
-    -- Git
-    { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
-    { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
-    { "<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
-    { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
-    { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
-    { "<leader>gd", function() require("config.git_review").working_tree() end, desc = "Git Diff" },
-
-    { "<leader>gc", function() require("config.git_review").open("commit") end, desc = "Review Last Commit" },
-    { "<leader>gr", function() require("config.git_review").open("branch") end, desc = "Review Branch from Merge Base" },
-    { "<leader>gm", function() require("config.git_review").open("main") end, desc = "Review against Mainline Tip" },
-
     -- Message routing/history and dismiss mappings belong to Noice.
 
     -- Words (LSP references highlight)

@@ -13,7 +13,7 @@ Leader 是空格。按功能分组，插件名不进入分组。按空格后 whi
 | `s` 搜索与替换 | `sr` 项目替换；`sw` 按光标词预填；`sb` 限定当前文件；`sv` 按选区预填（Visual 模式）；`st` 搜索 TODO |
 | `b` Buffers & Scratch | `bb` buffer 列表；`bd` 删除当前 buffer 并保留布局；`bs` 打开/关闭 scratch；`bS` 选择已有 scratch |
 | `c` Code | `cf` 手动格式化（Normal / Visual）；`cd` 光标处诊断浮窗；`cr` 重启 LSP；`cp` Markdown 浏览器预览 |
-| `g` Git | `gg` 项目 lazygit；`gG` 当前文件目录 lazygit；`gb` 分支；`gl` 提交日志；`gL` 当前行日志；`gs` 状态；`gS` stash；`gd` 暂存与未暂存的 diff；`gc` 最近提交；`gr` 自分叉点；`gm` 对比主分支 tip；`gD` 自选比较范围；`gH` 当前文件历史 |
+| `g` Git | `gg` 项目 lazygit；`gG` 当前文件目录 lazygit；`gd` 工作区 CodeDiff；`gD` 自选版本/范围 CodeDiff；`gH` 当前文件历史 |
 | `h` Git Hunks | `hs` stage hunk；`hr` reset hunk；`hp` 预览 hunk；`hb` 当前行 blame；`hd` 当前文件 diff |
 | `u` UI | `uw` 折行；`ul` 相对行号；`uc` 光标行；`uC` 主题（实时预览）；`uh` inlay hints；`us` sticky context |
 | `n` Messages & Notifications | `nh` 统一消息与通知历史（Snacks picker）；`nd` 同时收起消息与通知。Noice 负责路由和历史，Snacks 负责通知与历史列表显示；移除 `nm` / `nc` |
@@ -33,7 +33,7 @@ VSCode 使用相同分组和同义操作，但只映射宿主实际支持的入�
 
 ### 多文件审阅（CodeDiff）
 
-按 `空格 gD` 会填入 `:CodeDiff `。直接回车打开工作区，或输入版本和路径再回车。路径相对于仓库根目录。
+按 `空格 gd` 直接打开工作区审阅；按 `空格 gD` 会填入 `:CodeDiff `，再输入版本、范围或路径。路径相对于仓库根目录。所有 Git 操作（stage、commit、branch、stash、log）统一用 `空格 gg` 的 lazygit。
 
 | 命令 | 审阅内容 |
 | --- | --- |
@@ -48,19 +48,6 @@ VSCode 使用相同分组和同义操作，但只映射宿主实际支持的入�
 在 CodeDiff 标签页按 `g?` 弹出当前审阅模式的快捷键，按 Esc 关闭。文件面板用 `i` 切换列表和目录树，回车选择文件。在 diff 窗口用 `]f` / `[f` 切文件，`]c` / `[c` 跳改动，`t` 切换双栏和行内布局，`q` 关闭审阅。工作区视图会跟随磁盘上的修改更新，文件面板也可以按 `R` 手动刷新。
 
 在源码文件中按 `空格 gH` 查看当前文件的提交历史。用 `:CodeDiff history master..HEAD` 可以逐个审阅分支上的提交。
-
-### 快速预览（Snacks）
-
-独立 Neovim 中，按空格后接下列按键。后三个入口列出变更文件，输入路径可筛选，移动选中项即可预览补丁，回车聚焦补丁以便滚动。重命名分别列出旧路径的删除和新路径的新增。
-
-| 按键 | 比较范围 |
-| --- | --- |
-| `gd` | 查看尚未提交的 hunk，包含已暂存和未暂存的修改。尚未被 Git 跟踪的新文件可在 `gs` 查看。 |
-| `gc` | 查看 HEAD 这一次提交引入的改动。合并提交与第一父提交比较，首次提交则列出新增文件。 |
-| `gr` | 查看当前分支自共同祖先以来的累计改动，相当于 `git diff master...HEAD`。适合审阅整个功能分支。 |
-| `gm` | 直接比较主分支 tip 和 HEAD，相当于 `git diff master HEAD`。主分支在分叉后独有的改动也会体现。 |
-
-`gr` 和 `gm` 依次选取本地 `master`、`main`、已缓存的 `origin/master`、`origin/main`。标题显示选中的引用。三个提交比较入口均使用已提交的快照。
 
 ## 本轮迁移表
 
@@ -81,6 +68,8 @@ VSCode 使用相同分组和同义操作，但只映射宿主实际支持的入�
 | `lr` | `cr` | 重启 LSP |
 | `mp` | `cp` | Markdown 预览 |
 | `.` / `S` | `bs` / `bS` | scratch 开关 / 列表 |
+| `gb` / `gl` / `gL` / `gs` / `gS` | `gg` | Git 操作统一到 lazygit |
+| `gc` / `gr` / `gm` | `gD` | 用 CodeDiff 输入 `HEAD~1` / `master...HEAD` / `master..HEAD` |
 
 ## 维护约定
 
