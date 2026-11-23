@@ -26,7 +26,7 @@ local function check()
     for _, name in ipairs({ "config.format.formatters", "config.lsp.servers" }) do
       assert(not package.loaded[name], "Importing specs loaded " .. name)
     end
-    for _, name in ipairs({ "config.lsp", "config.lsp.ui", "config.theme", "config.format.indent", "config.format.cpp-indent" }) do
+    for _, name in ipairs({ "config.lsp", "config.lsp.ui", "config.theme", "config.indent" }) do
       require(name)
     end
   end)
@@ -62,13 +62,17 @@ local function check()
     end
     local installer = assert(spec("WhoIsSethDaniel/mason-tool-installer.nvim"))
     local integration = assert(spec("mason-org/mason-lspconfig.nvim"))
-    assert(vim.list_contains(installer.opts().ensure_installed, "second"))
-    assert(vim.deep_equal(integration.opts().automatic_enable, { "second" }))
+    assert(vim.list_contains(installer.opts().ensure_installed, "stylua"))
+    assert(not vim.list_contains(installer.opts().ensure_installed, "second"), "Installer received an lspconfig name")
+    assert(integration.opts().automatic_enable == true)
     assert(queried["tree-sitter"] and not queried["tree-sitter-cli"], "Package name was used as executable")
     installed["test-server-second"] = true
     assert(#lsp.missing() == 0)
-    assert(not vim.list_contains(installer.opts().ensure_installed, "second"), "Installer reused a startup snapshot")
-    assert(#integration.opts().automatic_enable == 0)
+    installed["stylua"] = true
+    assert(not vim.list_contains(installer.opts().ensure_installed, "stylua"), "Installer ignored PATH tools")
+    installed["tree-sitter"] = true
+    assert(not vim.list_contains(installer.opts().ensure_installed, "tree-sitter-cli"), "Package name was used as executable")
+    assert(integration.opts().automatic_enable == true)
     assert(#configured == 2 and #enabled == 1, "Installer options initialized LSP")
   end)
   vim.fn.executable, vim.lsp.config, vim.lsp.enable = executable, config, enable

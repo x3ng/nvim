@@ -19,8 +19,7 @@ local function check()
       "config.theme",
       "config.lsp",
       "config.lsp.ui",
-      "config.format.indent",
-      "config.format.cpp-indent",
+      "config.indent",
     }) do
       assert(not package.loaded[name], "Neovim module leaked: " .. name)
     end

@@ -1,4 +1,4 @@
--- Installation sources; formatter behavior is declared in formatters.lua.
+-- Mason package names for formatter and parser tooling; selection lives in formatters.lua.
 return {
   packages = {
     "black",

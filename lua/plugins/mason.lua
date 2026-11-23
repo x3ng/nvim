@@ -4,9 +4,9 @@ local function available(command)
     or vim.fn.executable(vim.fn.stdpath("data") .. "/mason/bin/" .. command) == 1
 end
 
-local function missing_tools()
+local function missing_packages()
   local tools = require("config.format.tools")
-  local missing = require("config.lsp").missing()
+  local missing = {}
   for _, name in ipairs(tools.packages) do
     if not available(tools.commands[name] or name) then missing[#missing + 1] = name end
   end
@@ -35,7 +35,7 @@ return {
       "neovim/nvim-lspconfig",
     },
     opts = function()
-      return { ensure_installed = {}, automatic_enable = require("config.lsp").missing() }
+      return { ensure_installed = {}, automatic_enable = true }
     end,
   },
   {
@@ -43,7 +43,7 @@ return {
     cmd = { "MasonToolsInstall", "MasonToolsInstallSync", "MasonToolsUpdate", "MasonToolsUpdateSync" },
     dependencies = { "williamboman/mason.nvim", "mason-org/mason-lspconfig.nvim" },
     opts = function()
-      return { ensure_installed = missing_tools(), run_on_start = false }
+      return { ensure_installed = missing_packages(), run_on_start = false }
     end,
   },
 }

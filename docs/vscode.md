@@ -27,7 +27,7 @@ branch and owns command bridges.
 In VSCode, indentation/EditorConfig, diagnostics, language servers, completion,
 auto-pairs, commenting, highlighting, folding, Git UI, terminal and formatting
 come from VSCode and its extensions. Configure your language tooling there.
-`:SetIndent` and automatic clang-format indentation discovery are Neovim-only.
+`:SetIndent` is Neovim-only; VSCode owns indentation detection and EditorConfig.
 Saving does not invoke a formatter from this Neovim configuration; VSCode's own
 `editor.formatOnSave` setting remains authoritative.
 

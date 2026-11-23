@@ -8,7 +8,6 @@ if vim.g.vscode then
 else
   require("config.copy_location").setup()
   require("config.autocmds").setup()
-  require("config.format.indent").setup()
-  require("config.format.cpp-indent").setup()
+  require("config.indent").setup()
   require("config.theme").setup()
 end

@@ -1,3 +1,5 @@
+-- Editor indentation policy: manual overrides and re-detection after formatting.
+-- Formatter names live in config.format; this module only changes buffer options.
 local M = {}
 
 function M.setup()

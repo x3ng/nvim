@@ -69,11 +69,14 @@ return {
 
     vim.api.nvim_create_autocmd("FileType", {
       group = group,
-      desc = "Start treesitter highlighting, indent and folds",
+      desc = "Start treesitter highlighting and folds; indent only with a query",
       callback = function(args)
         if pcall(vim.treesitter.start, args.buf) then
           vim.b[args.buf].treesitter_started = true
-          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          local lang = vim.treesitter.language.get_lang(args.match)
+          if lang and vim.treesitter.query.get(lang, "indents") then
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
           if vim.api.nvim_get_current_buf() == args.buf then apply_folds() end
         end
       end,

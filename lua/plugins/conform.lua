@@ -9,7 +9,7 @@ return {
         local buf = vim.api.nvim_get_current_buf()
         require("conform").format(
           { buf = buf, async = true, lsp_format = "fallback" },
-          require("config.format.indent").after_format(buf)
+          require("config.indent").after_format(buf)
         )
       end,
       mode = { "n", "v" },
