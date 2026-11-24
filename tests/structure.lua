@@ -23,10 +23,10 @@ local function check()
     for name, kind in vim.fs.dir("lua/plugins") do
       if kind == "file" and name:sub(-4) == ".lua" then require("plugins." .. name:sub(1, -5)) end
     end
-    for _, name in ipairs({ "config.format.formatters", "config.lsp.servers" }) do
+    for _, name in ipairs({ "config.executable", "config.lsp.servers" }) do
       assert(not package.loaded[name], "Importing specs loaded " .. name)
     end
-    for _, name in ipairs({ "config.lsp", "config.lsp.ui", "config.theme", "config.indent" }) do
+    for _, name in ipairs({ "config.lsp.ui", "config.theme", "config.indent" }) do
       require(name)
     end
   end)
@@ -39,7 +39,7 @@ local function check()
     first = { cmd = { "test-server-first" } },
     second = { cmd = { "test-server-second" } },
   }
-  local lsp = require("config.lsp")
+  local lsp = require("plugins.lsp")
   local installed, configured, enabled, queried = { ["test-server-first"] = true }, {}, {}, {}
   local executable, config, enable = vim.fn.executable, vim.lsp.config, vim.lsp.enable
   vim.fn.executable = function(command)
@@ -50,9 +50,7 @@ local function check()
   vim.lsp.config = function(name) configured[#configured + 1] = name end
   vim.lsp.enable = function(name) enabled[#enabled + 1] = name end
   ok, err = pcall(function()
-    assert(vim.deep_equal(lsp.missing(), { "second" }))
-    assert(#configured == 0 and #enabled == 0, "A query initialized LSP")
-    lsp.setup()
+    lsp.config()
     assert(#configured == 2 and vim.deep_equal(enabled, { "first" }))
     local specs = require("plugins.mason")
     local function spec(name)
@@ -66,8 +64,6 @@ local function check()
     assert(not vim.list_contains(installer.opts().ensure_installed, "second"), "Installer received an lspconfig name")
     assert(integration.opts().automatic_enable == true)
     assert(queried["tree-sitter"] and not queried["tree-sitter-cli"], "Package name was used as executable")
-    installed["test-server-second"] = true
-    assert(#lsp.missing() == 0)
     installed["stylua"] = true
     assert(not vim.list_contains(installer.opts().ensure_installed, "stylua"), "Installer ignored PATH tools")
     installed["tree-sitter"] = true

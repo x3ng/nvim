@@ -26,8 +26,8 @@ if not vim.g.vscode then
 
   -- Tab / Indent
   vim.opt.tabstop = 4 -- number of visual spaces per TAB
-  vim.opt.softtabstop = 4 -- number of spaces in tab when editing
-  vim.opt.shiftwidth = 4 -- insert 4 spaces on a tab
+  vim.opt.softtabstop = -1 -- Tab and Backspace follow the effective shiftwidth
+  vim.opt.shiftwidth = 4 -- default width of one indentation level
   vim.opt.expandtab = true -- tabs are spaces, mainly because of Python
 
   -- ── UI ─────────────────────────────────────────────────────────────────────

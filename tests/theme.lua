@@ -1,4 +1,4 @@
--- Run with isolated XDG_STATE_HOME/XDG_CACHE_HOME; see docs/maintenance.md.
+-- Run with isolated XDG_STATE_HOME/XDG_CACHE_HOME; see README.md.
 local function check()
   local api = vim.api
   local state = vim.fn.stdpath("state")

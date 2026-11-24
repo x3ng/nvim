@@ -1,4 +1,4 @@
--- Run after init.lua in a headless process; see docs/vscode.md.
+-- Run after init.lua in a headless process; see README.md.
 local function check()
   local vscode = not not vim.g.vscode
   assert(vim.g.mapleader == " " and vim.o.ignorecase and vim.o.smartcase)
@@ -17,7 +17,7 @@ local function check()
       "config.autocmds",
       "config.copy_location",
       "config.theme",
-      "config.lsp",
+      "config.lsp.servers",
       "config.lsp.ui",
       "config.indent",
     }) do
@@ -77,14 +77,14 @@ local function check()
     assert(settings["editor.lineNumbers"] == "on" and settings["editor.renderLineHighlight"] == "line")
   else
     require("lazy").load({ plugins = { "nvim-lspconfig" } })
-    assert(package.loaded["config"] and package.loaded["config.lsp"])
+    assert(package.loaded["config"] and package.loaded["config.lsp.servers"])
     assert(not package.loaded["config.vscode"])
     assert(config.plugins["snacks.nvim"] and config.plugins["blink.cmp"])
     assert(vim.o.number and vim.o.relativenumber and vim.o.laststatus == 3)
     assert(vim.fn.maparg("<C-a>", "i") == "")
     assert(vim.fn.maparg("<leader>w", "n") == "<Cmd>w<CR>" or vim.fn.maparg("<leader>w", "n") == "<cmd>w<cr>")
     vim.cmd("SetIndent tab 8")
-    assert(vim.bo.shiftwidth == 8 and not vim.bo.expandtab and vim.b.manual_indent)
+    assert(vim.bo.shiftwidth == 8 and not vim.bo.expandtab and vim.bo.tabstop == 8 and vim.bo.softtabstop == -1)
   end
   require("lazy").load({ plugins = { "nvim-surround" } })
   vim.api.nvim_buf_set_lines(0, 0, -1, false, { "word" })

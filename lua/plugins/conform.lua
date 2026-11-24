@@ -5,21 +5,28 @@ return {
   keys = {
     {
       "<leader>cf",
-      function()
-        local buf = vim.api.nvim_get_current_buf()
-        require("conform").format(
-          { buf = buf, async = true, lsp_format = "fallback" },
-          require("config.indent").after_format(buf)
-        )
-      end,
+      function() require("conform").format({ async = true }) end,
       mode = { "n", "v" },
       desc = "Format Buffer/Selection",
     },
   },
-  opts = function()
-    return {
-      formatters_by_ft = require("config.format.formatters"),
-      default_format_opts = { lsp_format = "fallback" },
-    }
-  end,
+  opts = {
+    default_format_opts = { lsp_format = "fallback" },
+    formatters_by_ft = {
+      lua = { "stylua" },
+      javascript = { "prettierd", "prettier", stop_after_first = true },
+      typescript = { "prettierd", "prettier", stop_after_first = true },
+      javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+      typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+      python = { "isort", "black" },
+      haskell = { "fourmolu" },
+      go = { "goimports", "gofmt", stop_after_first = true },
+      nix = { "nixfmt" },
+      rust = { "rustfmt" },
+      markdown = { "markdownlint" },
+      verilog = { "verible" },
+      systemverilog = { "verible" },
+      -- c/cpp: clangd formats via Conform's lsp_format fallback
+    },
+  },
 }

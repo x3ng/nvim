@@ -1,14 +1,21 @@
 -- Query tools only when the installer is loaded, never while importing specs.
-local function available(command)
-  return vim.fn.executable(command) == 1
-    or vim.fn.executable(vim.fn.stdpath("data") .. "/mason/bin/" .. command) == 1
-end
-
 local function missing_packages()
-  local tools = require("config.format.tools")
+  local available = require("config.executable")
+  local packages = {
+    "black",
+    "isort",
+    "markdownlint",
+    "prettier",
+    "prettierd",
+    "stylua",
+    "fourmolu",
+    "goimports",
+    "tree-sitter-cli",
+  }
   local missing = {}
-  for _, name in ipairs(tools.packages) do
-    if not available(tools.commands[name] or name) then missing[#missing + 1] = name end
+  for _, name in ipairs(packages) do
+    local command = name == "tree-sitter-cli" and "tree-sitter" or name
+    if not available(command) then missing[#missing + 1] = name end
   end
   return missing
 end
