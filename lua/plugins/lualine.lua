@@ -17,6 +17,10 @@ return {
       },
       lualine_x = {
         {
+          function() return require("noice").api.status.command.get() end,
+          cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+        },
+        {
           -- cmdheight=0 hides vim's native "recording @q" message; surface it
           -- here instead. Zero-width when not recording.
           function()
@@ -29,6 +33,6 @@ return {
       lualine_y = { "progress" },
       lualine_z = { "location" },
     },
-    extensions = { "oil", "lazy", "mason" },
+    extensions = { "oil", "lazy", "mason", "quickfix" },
   },
 }
