@@ -20,7 +20,9 @@ if not vim.g.vscode then
   vim.opt.completeopt = { "menu", "menuone", "noselect" }
   vim.opt.mouse = "a" -- allow the mouse to be used in nvim
 
-  if vim.fn.executable("wl-copy") == 1 or vim.fn.executable("xclip") == 1 or vim.fn.executable("xsel") == 1 then
+  -- Over SSH 'clipboard' stays empty so Neovim can auto-detect OSC 52; copy with "+y.
+  local local_clipboard = vim.fn.executable("wl-copy") == 1 or vim.fn.executable("xclip") == 1 or vim.fn.executable("xsel") == 1
+  if not vim.env.SSH_CONNECTION and local_clipboard then
     vim.opt.clipboard = "unnamedplus" -- use system clipboard when a provider is available
   end
 
