@@ -5,6 +5,10 @@ if not vim.g.vscode then
   vim.keymap.set("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer", silent = true })
   vim.keymap.set("n", "[b", "<cmd>bprev<CR>", { desc = "Prev buffer", silent = true })
 
+  -- Move by screen line through soft-wrapped text; counts keep line jumps.
+  vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+  vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+
   -- ── Window navigation ──────────────────────────────────────────────────────
   vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Window left", silent = true })
   vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Window down", silent = true })

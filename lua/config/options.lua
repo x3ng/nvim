@@ -7,7 +7,7 @@ vim.opt.jumpoptions = "stack"
 
 -- ── Searching ────────────────────────────────────────────────────────────────
 vim.opt.incsearch = true
-vim.opt.hlsearch = false
+vim.opt.hlsearch = not vim.g.vscode -- <Esc> clears; VSCode highlights matches itself
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 

@@ -21,6 +21,7 @@ return {
       map("n", "]h", gs.next_hunk, "Next hunk")
       map("n", "[h", gs.prev_hunk, "Prev hunk")
       map("n", "<leader>hs", gs.stage_hunk, "Stage hunk")
+      map("x", "<leader>hs", function() gs.stage_hunk({ vim.fn.line("v"), vim.fn.line(".") }) end, "Stage selected lines")
       map("n", "<leader>hr", gs.reset_hunk, "Reset hunk")
       map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
       map("n", "<leader>hb", function() gs.blame_line({ full = true }) end, "Blame line")
