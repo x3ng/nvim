@@ -18,7 +18,7 @@ end
 -- Returns the location text, failure message, file path and line range.
 local function location(visual)
   local path = vim.api.nvim_buf_get_name(0)
-  if path == "" then
+  if path == "" or vim.bo.buftype ~= "" or path:match("^%a[%w+.-]*://") then
     return nil, "No file path to copy"
   end
 

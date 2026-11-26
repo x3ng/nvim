@@ -42,13 +42,13 @@ return {
       "neovim/nvim-lspconfig",
     },
     opts = function()
-      return { ensure_installed = {}, automatic_enable = true }
+      return { ensure_installed = {}, automatic_enable = false }
     end,
   },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     cmd = { "MasonToolsInstall", "MasonToolsInstallSync", "MasonToolsUpdate", "MasonToolsUpdateSync" },
-    dependencies = { "williamboman/mason.nvim", "mason-org/mason-lspconfig.nvim" },
+    dependencies = { "williamboman/mason.nvim" },
     opts = function()
       return { ensure_installed = missing_packages(), run_on_start = false }
     end,

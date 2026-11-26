@@ -88,20 +88,10 @@ return {
     },
   },
 
+  -- nvim-lspconfig's cmd prefers the project's node_modules/.bin server and its
+  -- root_dir excludes Deno projects; only the executable probe is declared here.
   ts_ls = {
-    cmd = { "typescript-language-server", "--stdio" },
-    filetypes = {
-      "javascript",
-      "javascriptreact",
-      "typescript",
-      "typescriptreact",
-    },
-    root_markers = {
-      "package.json",
-      "tsconfig.json",
-      "jsconfig.json",
-      ".git",
-    },
+    executable = "typescript-language-server",
   },
 
   nil_ls = {

@@ -57,12 +57,28 @@ return {
     -- no `verilog` parser on main branch; reuse systemverilog for .v files
     vim.treesitter.language.register("systemverilog", "verilog")
 
-    -- Folds are window-local options (`vim.wo[bufnr]` does not exist), so they
-    -- can only be set for the window that is current when the autocmd fires.
-    local function apply_folds()
-      if vim.wo.foldmethod ~= "expr" then vim.wo.foldmethod = "expr" end
-      local expr = "v:lua.vim.treesitter.foldexpr()"
-      if vim.wo.foldexpr ~= expr then vim.wo.foldexpr = expr end
+    local foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    local indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+
+    local function sync_folds(buf, win)
+      local state = vim.b[buf]
+      local windows = state.treesitter_fold_windows or {}
+      local key = tostring(win)
+      local opts = vim.wo[win][0]
+      if state.treesitter_started and not windows[key] then
+        windows[key] = { method = opts.foldmethod, expr = opts.foldexpr }
+        opts.foldexpr = foldexpr
+        opts.foldmethod = "expr"
+      elseif not state.treesitter_started and windows[key] then
+        if opts.foldexpr == foldexpr then
+          if opts.foldmethod == "expr" then opts.foldmethod = windows[key].method end
+          opts.foldexpr = windows[key].expr
+        end
+        windows[key] = nil
+      else
+        return
+      end
+      state.treesitter_fold_windows = next(windows) and windows or nil
     end
 
     local group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true })
@@ -71,13 +87,20 @@ return {
       group = group,
       desc = "Start treesitter highlighting and folds; indent only with a query",
       callback = function(args)
-        if pcall(vim.treesitter.start, args.buf) then
-          vim.b[args.buf].treesitter_started = true
-          local lang = vim.treesitter.language.get_lang(args.match)
-          if lang and vim.treesitter.query.get(lang, "indents") then
-            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        local state, opts = vim.b[args.buf], vim.bo[args.buf]
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if opts.indentexpr == indentexpr then opts.indentexpr = "" end
+        if lang and pcall(vim.treesitter.start, args.buf, lang) then
+          state.treesitter_started = true
+          if vim.treesitter.query.get(lang, "indents") then
+            opts.indentexpr = indentexpr
           end
-          if vim.api.nvim_get_current_buf() == args.buf then apply_folds() end
+        elseif state.treesitter_started then
+          vim.treesitter.stop(args.buf)
+          state.treesitter_started = nil
+        end
+        for _, win in ipairs(vim.fn.win_findbuf(args.buf)) do
+          sync_folds(args.buf, win)
         end
       end,
     })
@@ -86,9 +109,10 @@ return {
     -- still needs folds in the window that actually displays it
     vim.api.nvim_create_autocmd("BufWinEnter", {
       group = group,
-      desc = "Re-apply treesitter folds in every window showing the buffer",
+      desc = "Initialize treesitter folds in each window showing the buffer",
       callback = function(args)
-        if vim.b[args.buf].treesitter_started then apply_folds() end
+        local win = vim.api.nvim_get_current_win()
+        if vim.api.nvim_win_get_buf(win) == args.buf then sync_folds(args.buf, win) end
       end,
     })
 

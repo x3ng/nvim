@@ -12,19 +12,21 @@ local fn, api = vim.fn, vim.api
 local statefile = fn.stdpath("state") .. "/user-theme"
 local previewing = false
 
+-- Line 1 is the colorscheme; optional line 2 is 'background' (older files lack it).
 local function read_state(path)
   local f = io.open(path, "r")
   if not f then return nil end
-  local value = f:read("l")
+  local value, background = f:read("l"), f:read("l")
   f:close()
-  return value and value ~= "" and value or nil
+  if background ~= "light" and background ~= "dark" then background = nil end
+  return value and value ~= "" and value or nil, background
 end
 
-local function write_state(path, value)
+local function write_state(path, value, background)
   fn.mkdir(fn.stdpath("state"), "p")
   local f = io.open(path, "w")
   if f then
-    f:write(value)
+    f:write(value .. "\n" .. background .. "\n")
     f:close()
   end
 end
@@ -36,7 +38,7 @@ return {
     api.nvim_create_autocmd("ColorScheme", {
       group = api.nvim_create_augroup("UserTheme", { clear = true }),
       callback = function(args)
-        if not previewing then write_state(statefile, args.match) end
+        if not previewing then write_state(statefile, args.match, vim.o.background) end
       end,
     })
   end,
@@ -52,7 +54,8 @@ return {
   end,
   -- Called after lazy.setup so theme plugins can be loaded by :colorscheme.
   load = function()
-    local persisted = read_state(statefile)
+    local persisted, background = read_state(statefile)
+    if background then vim.o.background = background end
     if not (persisted and pcall(vim.cmd.colorscheme, persisted)) then
       if not pcall(vim.cmd.colorscheme, default) then vim.cmd.colorscheme("default") end
     end

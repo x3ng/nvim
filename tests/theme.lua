@@ -39,6 +39,12 @@ local function check()
   vim.g.colors_name = nil
   require("config.theme").load()
   assert(vim.g.colors_name == "gruvbox" and hl("Normal").bg)
+  vim.o.background = "light"
+  vim.cmd.colorscheme("gruvbox")
+  assert(vim.fn.readfile(state .. "/user-theme")[2] == "light")
+  require("config.theme").preview("gruvbox", "dark")
+  require("config.theme").load()
+  assert(vim.g.colors_name == "gruvbox" and vim.o.background == "light", "Background was not restored")
   vim.fn.writefile({ "uninstalled-theme" }, state .. "/user-theme")
   require("config.theme").load()
   assert(vim.g.colors_name == "vscode" and saved("user-theme") == "vscode")

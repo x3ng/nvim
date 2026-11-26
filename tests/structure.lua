@@ -62,13 +62,13 @@ local function check()
     local integration = assert(spec("mason-org/mason-lspconfig.nvim"))
     assert(vim.list_contains(installer.opts().ensure_installed, "stylua"))
     assert(not vim.list_contains(installer.opts().ensure_installed, "second"), "Installer received an lspconfig name")
-    assert(integration.opts().automatic_enable == true)
+    assert(integration.opts().automatic_enable == false, "Mason could enable servers outside the configured set")
+    assert(not vim.list_contains(installer.dependencies, "mason-org/mason-lspconfig.nvim"))
     assert(queried["tree-sitter"] and not queried["tree-sitter-cli"], "Package name was used as executable")
     installed["stylua"] = true
     assert(not vim.list_contains(installer.opts().ensure_installed, "stylua"), "Installer ignored PATH tools")
     installed["tree-sitter"] = true
     assert(not vim.list_contains(installer.opts().ensure_installed, "tree-sitter-cli"), "Package name was used as executable")
-    assert(integration.opts().automatic_enable == true)
     assert(#configured == 2 and #enabled == 1, "Installer options initialized LSP")
   end)
   vim.fn.executable, vim.lsp.config, vim.lsp.enable = executable, config, enable

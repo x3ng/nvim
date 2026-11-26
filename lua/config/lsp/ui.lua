@@ -20,7 +20,11 @@ function M.setup()
     update_in_insert = false,
     severity_sort = true,
     -- show the diagnostic in a float while jumping with ]d/[d
-    jump = { float = true },
+    jump = {
+      on_jump = function(_, bufnr)
+        vim.diagnostic.open_float({ bufnr = bufnr, scope = "cursor", focus = false })
+      end,
+    },
     -- no `float.border`: 'winborder' is set globally in config/options.lua
   })
 
@@ -42,7 +46,7 @@ function M.setup()
       --   gO     document symbols      (global)
       --   gra grn grr gri grt grx      code action / rename / references /
       --                                implementation / type def / codelens
-      --   ]d [d  diagnostics, ]w [w    with `jump = { float = true }` above
+      --   ]d [d  diagnostics, ]w [w    with the `jump.on_jump` float above
       -- `gr`/`gi` used to be shadowed here by a global reference/implementation
       -- map, which killed the whole `gr*` family — do not bring that back.
       map("gd", vim.lsp.buf.definition, "Goto Definition")
